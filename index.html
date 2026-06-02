@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Hells Heaven</title>
+<meta name="description" content="Hells Heaven" />
+<style>
+  :root {
+    --ember: #c2453a;
+    --ember-bright: #ff6a4d;
+    --gold: #b58a4a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: 'Cinzel', 'Trajan Pro', Georgia, serif;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+    cursor: default;
+  }
+
+  /* ---------- Background layers ---------- */
+  .bg {
+    position: fixed; inset: 0;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    z-index: 0;
+    transition: transform 0.4s cubic-bezier(.2,.8,.2,1);
+    will-change: transform;
+  }
+  .bg-desktop { background-image: url('bg-desktop.jpg'); }
+  .bg-mobile  { background-image: url('bg-mobile.jpg'); display: none; }
+
+  @media (max-aspect-ratio: 1/1) {
+    .bg-desktop { display: none; }
+    .bg-mobile  { display: block; }
+  }
+
+  /* Vignette + grain over background */
+  .vignette {
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,.55) 80%, rgba(0,0,0,.85) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ---------- Starfield (subtle twinkle) ---------- */
+  #stars {
+    position: fixed; inset: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* ---------- Ember particles ---------- */
+  #embers {
+    position: fixed; inset: 0;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  /* ---------- Rune ring (rotating) ---------- */
+  .scene {
+    position: relative;
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 4;
+    perspective: 1400px;
+    perspective-origin: 50% 50%;
+  }
+
+  .ring {
+    position: absolute;
+    width: min(72vmin, 760px);
+    height: min(72vmin, 760px);
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.55;
+    mix-blend-mode: screen;
+  }
+  .ring svg { width: 100%; height: 100%; display: block; }
+
+  .ring-outer { animation: spin 90s linear infinite; }
+  .ring-mid   { animation: spin 60s linear infinite reverse; width: min(56vmin, 600px); height: min(56vmin, 600px); opacity: .4; }
+  .ring-inner { animation: spin 40s linear infinite; width: min(40vmin, 440px); height: min(40vmin, 440px); opacity: .35; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- Logo (3D pop-out) ---------- */
+  .logo-wrap {
+    position: relative;
+    width: min(60vmin, 640px);
+    height: min(60vmin, 640px);
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform 0.18s cubic-bezier(.2,.8,.2,1);
+  }
+
+  .logo-glow {
+    position: absolute;
+    inset: -8%;
+    background: radial-gradient(circle at center, rgba(194,69,58,.55) 0%, rgba(194,69,58,.18) 35%, transparent 65%);
+    filter: blur(40px);
+    animation: pulse 4.5s ease-in-out infinite;
+    transform: translateZ(-60px);
+    pointer-events: none;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: .55; transform: translateZ(-60px) scale(1); }
+    50%      { opacity: .85; transform: translateZ(-60px) scale(1.08); }
+  }
+
+  .logo {
+    position: relative;
+    width: 100%; height: 100%;
+    background: url('logo-clean.png') center / contain no-repeat;
+    filter:
+      drop-shadow(0 18px 28px rgba(0,0,0,.85))
+      drop-shadow(0 0 28px rgba(194,69,58,.45))
+      drop-shadow(0 0 60px rgba(194,69,58,.25));
+    transform: translateZ(40px);
+    animation: float 6.5s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateZ(40px) translateY(0); }
+    50%      { transform: translateZ(50px) translateY(-8px); }
+  }
+
+  /* ---------- Enter overlay (fade in) ---------- */
+  .enter {
+    position: fixed; inset: 0;
+    background: #000;
+    z-index: 100;
+    animation: fadeOut 1.8s ease-out 0.4s forwards;
+    pointer-events: none;
+  }
+  @keyframes fadeOut { to { opacity: 0; } }
+
+  /* ---------- Reduce motion ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .ring-outer, .ring-mid, .ring-inner,
+    .logo-glow, .logo { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="bg bg-desktop"></div>
+  <div class="bg bg-mobile"></div>
+  <div class="vignette"></div>
+
+  <canvas id="stars"></canvas>
+  <canvas id="embers"></canvas>
+
+  <div class="scene" id="scene">
+    <!-- Mystical rotating rune rings -->
+    <div class="ring ring-outer" aria-hidden="true">
+      <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="ringFade" cx="50%" cy="50%" r="50%">
+            <stop offset="70%" stop-color="rgba(194,69,58,0)"/>
+            <stop offset="92%" stop-color="rgba(255,106,77,0.65)"/>
+            <stop offset="100%" stop-color="rgba(194,69,58,0)"/>
+          </radialGradient>
+        </defs>
+        <circle cx="200" cy="200" r="195" fill="none" stroke="url(#ringFade)" stroke-width="1.2"/>
+        <circle cx="200" cy="200" r="180" fill="none" stroke="rgba(181,138,74,.45)" stroke-width=".6" stroke-dasharray="2 6"/>
+        <!-- Eight-point compass marks -->
+        <g stroke="rgba(255,160,120,.55)" stroke-width="1" fill="none">
+          <g id="mark">
+            <path d="M200 8 L196 22 L200 18 L204 22 Z" fill="rgba(255,160,120,.5)"/>
+          </g>
+          <use href="#mark" transform="rotate(45 200 200)"/>
+          <use href="#mark" transform="rotate(90 200 200)"/>
+          <use href="#mark" transform="rotate(135 200 200)"/>
+          <use href="#mark" transform="rotate(180 200 200)"/>
+          <use href="#mark" transform="rotate(225 200 200)"/>
+          <use href="#mark" transform="rotate(270 200 200)"/>
+          <use href="#mark" transform="rotate(315 200 200)"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="ring ring-mid" aria-hidden="true">
+      <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="200" cy="200" r="195" fill="none" stroke="rgba(181,138,74,.5)" stroke-width=".8"/>
+        <circle cx="200" cy="200" r="170" fill="none" stroke="rgba(194,69,58,.35)" stroke-width=".5" stroke-dasharray="1 4"/>
+      </svg>
+    </div>
+
+    <div class="ring ring-inner" aria-hidden="true">
+      <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="200" cy="200" r="195" fill="none" stroke="rgba(255,106,77,.4)" stroke-width=".6" stroke-dasharray="6 10"/>
+      </svg>
+    </div>
+
+    <!-- Logo with 3D parallax -->
+    <div class="logo-wrap" id="logoWrap">
+      <div class="logo-glow"></div>
+      <div class="logo"></div>
+    </div>
+  </div>
+
+  <div class="enter"></div>
+
+<script>
+(() => {
+  // ---------- 3D parallax tilt on logo ----------
+  const wrap = document.getElementById('logoWrap');
+  const scene = document.getElementById('scene');
+  const bgs = document.querySelectorAll('.bg');
+
+  let targetRX = 0, targetRY = 0, curRX = 0, curRY = 0;
+  let targetBX = 0, targetBY = 0, curBX = 0, curBY = 0;
+
+  function onMove(x, y) {
+    const w = window.innerWidth, h = window.innerHeight;
+    const nx = (x / w) * 2 - 1;   // -1..1
+    const ny = (y / h) * 2 - 1;
+    targetRY = nx * 14;           // rotate Y around vertical axis
+    targetRX = -ny * 10;          // rotate X around horizontal axis
+    targetBX = -nx * 18;          // bg parallax px
+    targetBY = -ny * 14;
+  }
+
+  window.addEventListener('mousemove', e => onMove(e.clientX, e.clientY), { passive: true });
+  window.addEventListener('touchmove', e => {
+    if (e.touches[0]) onMove(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true });
+
+  // Device orientation for mobile
+  window.addEventListener('deviceorientation', e => {
+    if (e.gamma == null || e.beta == null) return;
+    const gx = Math.max(-30, Math.min(30, e.gamma)) / 30; // -1..1
+    const gy = Math.max(-30, Math.min(30, e.beta - 45)) / 30;
+    targetRY = gx * 14;
+    targetRX = -gy * 10;
+    targetBX = -gx * 18;
+    targetBY = -gy * 14;
+  });
+
+  function animateTilt() {
+    curRX += (targetRX - curRX) * 0.08;
+    curRY += (targetRY - curRY) * 0.08;
+    curBX += (targetBX - curBX) * 0.06;
+    curBY += (targetBY - curBY) * 0.06;
+    wrap.style.transform = `rotateX(${curRX.toFixed(2)}deg) rotateY(${curRY.toFixed(2)}deg)`;
+    bgs.forEach(b => {
+      b.style.transform = `translate3d(${curBX.toFixed(1)}px, ${curBY.toFixed(1)}px, 0) scale(1.05)`;
+    });
+    requestAnimationFrame(animateTilt);
+  }
+  requestAnimationFrame(animateTilt);
+
+  // ---------- Starfield ----------
+  const starCanvas = document.getElementById('stars');
+  const sctx = starCanvas.getContext('2d');
+  let stars = [];
+
+  function sizeCanvas(c) {
+    c.width = window.innerWidth * devicePixelRatio;
+    c.height = window.innerHeight * devicePixelRatio;
+    c.style.width = window.innerWidth + 'px';
+    c.style.height = window.innerHeight + 'px';
+  }
+  function initStars() {
+    sizeCanvas(starCanvas);
+    const count = Math.floor((window.innerWidth * window.innerHeight) / 9000);
+    stars = Array.from({ length: count }, () => ({
+      x: Math.random() * starCanvas.width,
+      y: Math.random() * starCanvas.height,
+      r: Math.random() * 1.2 * devicePixelRatio + 0.2,
+      a: Math.random() * 0.6 + 0.2,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.4 + Math.random() * 0.8,
+      tint: Math.random() < 0.15
+    }));
+  }
+  function drawStars(t) {
+    sctx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+    for (const s of stars) {
+      const tw = (Math.sin(t * 0.001 * s.speed + s.phase) + 1) / 2;
+      const alpha = s.a * (0.4 + tw * 0.6);
+      sctx.beginPath();
+      sctx.fillStyle = s.tint
+        ? `rgba(255, 140, 110, ${alpha})`
+        : `rgba(255, 230, 210, ${alpha})`;
+      sctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      sctx.fill();
+    }
+  }
+
+  // ---------- Embers ----------
+  const emberCanvas = document.getElementById('embers');
+  const ectx = emberCanvas.getContext('2d');
+  let embers = [];
+
+  function spawnEmber() {
+    return {
+      x: Math.random() * emberCanvas.width,
+      y: emberCanvas.height + Math.random() * 50,
+      vx: (Math.random() - 0.5) * 0.3 * devicePixelRatio,
+      vy: -(0.3 + Math.random() * 0.7) * devicePixelRatio,
+      r: (Math.random() * 1.6 + 0.6) * devicePixelRatio,
+      life: 0,
+      maxLife: 280 + Math.random() * 320,
+      drift: Math.random() * Math.PI * 2
+    };
+  }
+  function initEmbers() {
+    sizeCanvas(emberCanvas);
+    const count = Math.floor((window.innerWidth * window.innerHeight) / 22000);
+    embers = Array.from({ length: count }, () => {
+      const e = spawnEmber();
+      e.y = Math.random() * emberCanvas.height;
+      e.life = Math.random() * e.maxLife;
+      return e;
+    });
+  }
+  function drawEmbers(t) {
+    ectx.clearRect(0, 0, emberCanvas.width, emberCanvas.height);
+    for (let i = 0; i < embers.length; i++) {
+      const e = embers[i];
+      e.life++;
+      e.drift += 0.01;
+      e.x += e.vx + Math.sin(e.drift) * 0.15 * devicePixelRatio;
+      e.y += e.vy;
+      if (e.life > e.maxLife || e.y < -20) {
+        embers[i] = spawnEmber();
+        continue;
+      }
+      const fade = 1 - (e.life / e.maxLife);
+      const alpha = Math.min(1, fade * 1.2) * 0.85;
+      const grad = ectx.createRadialGradient(e.x, e.y, 0, e.x, e.y, e.r * 4);
+      grad.addColorStop(0, `rgba(255, 180, 120, ${alpha})`);
+      grad.addColorStop(0.4, `rgba(255, 90, 50, ${alpha * 0.6})`);
+      grad.addColorStop(1, `rgba(180, 40, 20, 0)`);
+      ectx.fillStyle = grad;
+      ectx.beginPath();
+      ectx.arc(e.x, e.y, e.r * 4, 0, Math.PI * 2);
+      ectx.fill();
+
+      ectx.fillStyle = `rgba(255, 220, 180, ${alpha})`;
+      ectx.beginPath();
+      ectx.arc(e.x, e.y, e.r * 0.6, 0, Math.PI * 2);
+      ectx.fill();
+    }
+  }
+
+  // ---------- Main loop ----------
+  function loop(t) {
+    drawStars(t);
+    drawEmbers(t);
+    requestAnimationFrame(loop);
+  }
+
+  function init() {
+    initStars();
+    initEmbers();
+  }
+  init();
+  requestAnimationFrame(loop);
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(init, 150);
+  });
+})();
+</script>
+</body>
+</html>
