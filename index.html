@@ -247,12 +247,16 @@
     border-radius: 6px;
   }
 
-  /* Vertical line — spans the full bullet range with just a sliver of fade at the very edges */
-  .timeline::before {
+  /* Inner track grows with content; the line sits on it so it spans every event */
+  .timeline-track {
+    position: relative;
+    padding: 14px 0;
+  }
+  .timeline-track::before {
     content: "";
     position: absolute;
     left: 30px;
-    top: 14px; bottom: 14px;       /* end exactly where the first/last bullet centres are */
+    top: 0; bottom: 0;
     width: 2px;
     background: linear-gradient(180deg,
       rgba(194,69,58,.0) 0%,
@@ -561,7 +565,7 @@
     }
     .timeline-title { margin-bottom: .8em; }
     .timeline { padding-left: 44px; }
-    .timeline::before { left: 22px; }
+    .timeline-track::before { left: 22px; }
     .ev::before { left: -26px; }
     .ev::after  { left: -14px; width: 18px; }
     .back-btn { top: 14px; left: 14px; }
@@ -747,6 +751,9 @@
     </svg>`;
 
   const timelineEl = document.getElementById('timeline');
+  const trackEl = document.createElement('div');
+  trackEl.className = 'timeline-track';
+  timelineEl.appendChild(trackEl);
   EVENTS.forEach(([name, time, unlocked]) => {
     const div = document.createElement('div');
     div.className = 'ev' + (unlocked ? '' : ' locked');
@@ -761,7 +768,7 @@
     }
     div.innerHTML = html;
     if (!unlocked) div.addEventListener('click', openSealModal);
-    timelineEl.appendChild(div);
+    trackEl.appendChild(div);
   });
 
   // ---------- Seal modal ----------
