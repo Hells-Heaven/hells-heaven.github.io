@@ -255,7 +255,9 @@
   .timeline-track::before {
     content: "";
     position: absolute;
-    left: 30px;
+    /* .timeline has padding-left:56px; bullet is at card-32 (≈24px from .timeline edge).
+       To put the line at the same x, sit at -26px relative to .timeline-track */
+    left: -26px;
     top: 0; bottom: 0;
     width: 2px;
     background: linear-gradient(180deg,
@@ -565,7 +567,7 @@
     }
     .timeline-title { margin-bottom: .8em; }
     .timeline { padding-left: 44px; }
-    .timeline-track::before { left: 22px; }
+    .timeline-track::before { left: -22px; }
     .ev::before { left: -26px; }
     .ev::after  { left: -14px; width: 18px; }
     .back-btn { top: 14px; left: 14px; }
