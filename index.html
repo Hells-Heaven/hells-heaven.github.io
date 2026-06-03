@@ -328,6 +328,172 @@
     font-style: italic;
   }
 
+  /* ---------- Locked / sealed event ---------- */
+  .ev.locked {
+    background: linear-gradient(135deg, rgba(14,3,3,.55), rgba(28,8,8,.30));
+    border-color: rgba(120,90,40,.35);
+    padding-right: 70px;            /* room for the chain icon */
+    overflow: hidden;
+  }
+  .ev.locked .ev-name { color: rgba(216,201,164,.65); }
+  .ev.locked .ev-time { color: rgba(216,201,164,.4); }
+  .ev.locked::before {
+    /* dim bullet for locked entries */
+    background: radial-gradient(circle at 30% 30%, #6a4a26, #1a0c06 70%);
+    box-shadow: 0 0 8px rgba(120,90,40,.55);
+  }
+  .ev.locked:hover {
+    transform: translateX(4px);
+    border-color: rgba(180,140,60,.7);
+    background: linear-gradient(135deg, rgba(30,12,8,.55), rgba(50,18,10,.30));
+    box-shadow: 0 0 22px rgba(120,90,40,.45);
+  }
+  .ev.locked:hover::before {
+    transform: translateY(-50%) scale(1.18);
+    box-shadow: 0 0 14px rgba(200,150,70,.85), 0 0 24px rgba(120,90,40,.5);
+  }
+  .ev.locked:hover .seal-icon { transform: translateY(-50%) rotate(-8deg) scale(1.05); }
+  .ev.locked:hover .chain-band { opacity: .95; }
+
+  /* Diagonal chain band across the locked card */
+  .chain-band {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: .8;
+    overflow: hidden;
+    border-radius: inherit;
+  }
+  .chain-band svg {
+    position: absolute;
+    top: 50%; left: 0;
+    width: 100%; height: 70%;
+    transform: translateY(-50%);
+    opacity: .55;
+  }
+  /* Lock/seal icon on the right of the card */
+  .seal-icon {
+    position: absolute;
+    right: 18px; top: 50%;
+    transform: translateY(-50%);
+    width: 30px; height: 30px;
+    color: rgba(216,170,90,.85);
+    filter: drop-shadow(0 0 8px rgba(194,69,58,.45));
+    transition: transform .35s ease;
+    pointer-events: none;
+  }
+  .seal-icon svg { width: 100%; height: 100%; }
+
+  /* ---------- Seal modal (mystical "unavailable" message) ---------- */
+  .seal-modal {
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,.55) 0%, rgba(0,0,0,.85) 100%);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity .55s ease;
+  }
+  .seal-modal.open { opacity: 1; pointer-events: auto; }
+  .seal-card {
+    position: relative;
+    max-width: min(540px, 86vw);
+    padding: 56px 48px 48px;
+    text-align: center;
+    background:
+      radial-gradient(ellipse at top, rgba(60,16,12,.55) 0%, rgba(20,6,6,.85) 80%);
+    border: 1px solid rgba(194,69,58,.55);
+    border-radius: 10px;
+    box-shadow:
+      0 0 48px rgba(194,69,58,.4),
+      0 0 90px rgba(120,30,12,.35),
+      inset 0 0 36px rgba(0,0,0,.65);
+    color: var(--parch);
+    transform: scale(.92) translateY(8px);
+    transition: transform .55s cubic-bezier(.2,.8,.2,1);
+  }
+  .seal-modal.open .seal-card { transform: scale(1) translateY(0); }
+
+  /* Decorative corner sigils via pseudo-elements */
+  .seal-card::before, .seal-card::after {
+    content: "";
+    position: absolute;
+    width: 60px; height: 60px;
+    border: 1px solid rgba(216,170,90,.55);
+    border-radius: 2px;
+  }
+  .seal-card::before {
+    top: 10px; left: 10px;
+    border-right: none; border-bottom: none;
+  }
+  .seal-card::after {
+    bottom: 10px; right: 10px;
+    border-left: none; border-top: none;
+  }
+
+  .seal-glyph {
+    width: 56px; height: 56px;
+    margin: 0 auto 22px;
+    color: rgba(255,170,110,.85);
+    filter: drop-shadow(0 0 18px rgba(255,106,77,.55));
+    animation: sealPulse 3.2s ease-in-out infinite;
+  }
+  .seal-glyph svg { width: 100%; height: 100%; }
+  @keyframes sealPulse {
+    0%, 100% { opacity: .65; filter: drop-shadow(0 0 12px rgba(255,106,77,.45)); }
+    50%      { opacity: 1;   filter: drop-shadow(0 0 22px rgba(255,140,90,.75)); }
+  }
+
+  .seal-title {
+    font-family: inherit;
+    font-size: clamp(18px, 2.8vmin, 28px);
+    letter-spacing: .55em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 18px;
+    text-shadow: 0 0 22px rgba(194,69,58,.65), 0 2px 6px rgba(0,0,0,.9);
+    padding-left: .55em;
+  }
+  .seal-divider {
+    width: 60%;
+    height: 1px;
+    margin: 4px auto 22px;
+    background: linear-gradient(90deg, transparent, rgba(216,170,90,.6), transparent);
+  }
+  .seal-msg {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: clamp(13px, 1.7vmin, 17px);
+    color: rgba(216,201,164,.85);
+    line-height: 1.7;
+    letter-spacing: .04em;
+  }
+  .seal-sub {
+    margin-top: 18px;
+    font-size: clamp(10px, 1.2vmin, 12px);
+    letter-spacing: .4em;
+    text-transform: uppercase;
+    color: rgba(216,170,90,.55);
+  }
+  .seal-close {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 32px; height: 32px;
+    background: none;
+    border: 1px solid rgba(216,170,90,.5);
+    border-radius: 50%;
+    color: rgba(216,170,90,.85);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all .25s ease;
+  }
+  .seal-close:hover {
+    background: rgba(194,69,58,.25);
+    color: #fff;
+    box-shadow: 0 0 14px rgba(255,106,77,.55);
+  }
+
   /* ---------- Enter overlay (click to enter) ---------- */
   .enter {
     position: fixed; inset: 0;
@@ -476,6 +642,32 @@
     </div>
   </div>
 
+  <!-- Seal modal (shown when locked timeline entry is clicked) -->
+  <div class="seal-modal" id="sealModal" role="dialog" aria-hidden="true" aria-labelledby="sealTitle">
+    <div class="seal-card">
+      <button class="seal-close" id="sealClose" aria-label="Close">✕</button>
+      <div class="seal-glyph" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="32" cy="32" r="22"/>
+          <circle cx="32" cy="32" r="14" stroke-dasharray="2 4"/>
+          <path d="M32 6 L34 12 L32 16 L30 12 Z" fill="currentColor"/>
+          <path d="M32 58 L34 52 L32 48 L30 52 Z" fill="currentColor"/>
+          <path d="M6 32 L12 30 L16 32 L12 34 Z" fill="currentColor"/>
+          <path d="M58 32 L52 30 L48 32 L52 34 Z" fill="currentColor"/>
+          <rect x="26" y="26" width="12" height="14" rx="1.2"/>
+          <path d="M28 26 V22 a4 4 0 0 1 8 0 V26"/>
+        </svg>
+      </div>
+      <div class="seal-title" id="sealTitle">Sealed</div>
+      <div class="seal-divider"></div>
+      <div class="seal-msg">
+        This chronicle yet sleeps,<br/>
+        bound by seals older than the war itself.
+      </div>
+      <div class="seal-sub">Unavailable</div>
+    </div>
+  </div>
+
   <!-- Landing-only: Lore button -->
   <a href="#lore" class="lore-btn landing-only" id="loreBtn">Lore</a>
 
@@ -508,36 +700,92 @@
 <script>
 (() => {
   // ---------- Timeline data ----------
+  // Each entry: [name, time, unlocked?]
+  // HH1 — HH6 are unlocked; everything else is sealed until released.
   const EVENTS = [
-    ["HH7 — The Ragnarok",                              "Undocumented"],
-    ["HH8 — The Ancient War of Remnants",               "Undocumented"],
-    ["HH9 — The Age of Lostborns",                      "Year 0 — Year 1000"],
-    ["HH10 — The Cold War",                             "Year 1007 — Year 1030"],
-    ["HH11 — The Rise of Pandaemonium",                 "Year 1030 — 1999"],
-    ["HH12 — The Resurgence of the Golden Bloodline",   "1050 — 1080"],
-    ["HH1 — The First War of Hell and Heaven",          "Year 2000"],
-    ["HH2 — The Solaria Rebellion",                     "Year 2010 — 2020"],
-    ["HH3 — The Second War of Hell and Heaven",         "Year 2024 — 2029"],
-    ["HH4 — The Invasion of Middle Earth",              "Year 2030"],
-    ["HH5 — The Tartarus Prison Break",                 "Year 2031"],
-    ["HH6 — Hell's Civil War",                          "Year 2032"],
-    ["HH13 — The Battle of the Chosens",                "Year 2050 — 2055"],
-    ["HH14 — The Morning Star",                         "2082 — 2096"],
-    ["HH15 — The Last War of Hell and Heaven",          "Year 3000"],
-    ["HH16 — The Glorious Purpose (Part 1)",            "After year 3000"],
-    ["HH17 — The Glorious Purpose (Part 2)",            "After year 3000"],
-    ["HH18 — The Glorious Purpose (Part 3)",            "After year 3000"],
-    ["The Final Chapter of Hells Heaven: The Dawn of the New Sun", ""],
+    ["HH7 — The Ragnarok",                              "Undocumented",            false],
+    ["HH8 — The Ancient War of Remnants",               "Undocumented",            false],
+    ["HH9 — The Age of Lostborns",                      "Year 0 — Year 1000",      false],
+    ["HH10 — The Cold War",                             "Year 1007 — Year 1030",   false],
+    ["HH11 — The Rise of Pandaemonium",                 "Year 1030 — 1999",        false],
+    ["HH12 — The Resurgence of the Golden Bloodline",   "1050 — 1080",             false],
+    ["HH1 — The First War of Hell and Heaven",          "Year 2000",               true ],
+    ["HH2 — The Solaria Rebellion",                     "Year 2010 — 2020",        true ],
+    ["HH3 — The Second War of Hell and Heaven",         "Year 2024 — 2029",        true ],
+    ["HH4 — The Invasion of Middle Earth",              "Year 2030",               true ],
+    ["HH5 — The Tartarus Prison Break",                 "Year 2031",               true ],
+    ["HH6 — Hell's Civil War",                          "Year 2032",               true ],
+    ["HH13 — The Battle of the Chosens",                "Year 2050 — 2055",        false],
+    ["HH14 — The Morning Star",                         "2082 — 2096",             false],
+    ["HH15 — The Last War of Hell and Heaven",          "Year 3000",               false],
+    ["HH16 — The Glorious Purpose (Part 1)",            "After year 3000",         false],
+    ["HH17 — The Glorious Purpose (Part 2)",            "After year 3000",         false],
+    ["HH18 — The Glorious Purpose (Part 3)",            "After year 3000",         false],
+    ["The Final Chapter of Hells Heaven: The Dawn of the New Sun", "",             false],
   ];
 
+  // Reusable SVG snippets
+  const CHAIN_SVG = `
+    <svg viewBox="0 0 600 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="chainGrad" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0%"  stop-color="rgba(120,90,40,0)"/>
+          <stop offset="20%" stop-color="rgba(180,140,60,.55)"/>
+          <stop offset="50%" stop-color="rgba(216,170,90,.85)"/>
+          <stop offset="80%" stop-color="rgba(180,140,60,.55)"/>
+          <stop offset="100%" stop-color="rgba(120,90,40,0)"/>
+        </linearGradient>
+      </defs>
+      <g stroke="url(#chainGrad)" stroke-width="3" fill="none">
+        ${Array.from({length: 14}).map((_, i) => {
+          const cx = 20 + i*42;
+          const rot = i % 2 === 0 ? 0 : 90;
+          return `<ellipse cx="${cx}" cy="30" rx="14" ry="7" transform="rotate(${rot} ${cx} 30)"/>`;
+        }).join('')}
+      </g>
+    </svg>`;
+  const SEAL_LOCK_SVG = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="5" y="11" width="14" height="10" rx="1.5"/>
+      <path d="M8 11 V8 a4 4 0 0 1 8 0 V11"/>
+      <circle cx="12" cy="16" r="1.3" fill="currentColor"/>
+    </svg>`;
+
   const timelineEl = document.getElementById('timeline');
-  EVENTS.forEach(([name, time]) => {
+  EVENTS.forEach(([name, time, unlocked]) => {
     const div = document.createElement('div');
-    div.className = 'ev';
-    div.innerHTML =
+    div.className = 'ev' + (unlocked ? '' : ' locked');
+    let html =
       `<div class="ev-name">${name}</div>` +
       (time ? `<div class="ev-time">${time}</div>` : '');
+    if (!unlocked) {
+      html =
+        `<div class="chain-band" aria-hidden="true">${CHAIN_SVG}</div>` +
+        html +
+        `<div class="seal-icon" aria-hidden="true">${SEAL_LOCK_SVG}</div>`;
+    }
+    div.innerHTML = html;
+    if (!unlocked) div.addEventListener('click', openSealModal);
     timelineEl.appendChild(div);
+  });
+
+  // ---------- Seal modal ----------
+  const sealModal = document.getElementById('sealModal');
+  const sealClose = document.getElementById('sealClose');
+  function openSealModal() {
+    sealModal.classList.add('open');
+    sealModal.setAttribute('aria-hidden', 'false');
+  }
+  function closeSealModal() {
+    sealModal.classList.remove('open');
+    sealModal.setAttribute('aria-hidden', 'true');
+  }
+  sealClose.addEventListener('click', closeSealModal);
+  sealModal.addEventListener('click', e => {
+    if (e.target === sealModal) closeSealModal();
+  });
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && sealModal.classList.contains('open')) closeSealModal();
   });
 
   // ---------- View routing (hash) ----------
