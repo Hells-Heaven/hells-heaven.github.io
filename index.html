@@ -332,57 +332,52 @@
   .ev.locked {
     background: linear-gradient(135deg, rgba(14,3,3,.55), rgba(28,8,8,.30));
     border-color: rgba(120,90,40,.35);
-    padding-right: 70px;            /* room for the chain icon */
+    padding-right: 78px;            /* room for the seal band on the right */
+  }
+  .ev.locked .ev-name { color: rgba(216,201,164,.7); }
+  .ev.locked .ev-time { color: rgba(216,201,164,.45); }
+
+  /* Right-side seal band (vertical chain + padlock) */
+  .chain-band {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 62px;
+    pointer-events: none;
     overflow: hidden;
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+    background: linear-gradient(270deg, rgba(60,18,8,.45) 0%, rgba(60,18,8,0) 100%);
+    border-left: 1px solid rgba(180,140,60,.18);
   }
-  .ev.locked .ev-name { color: rgba(216,201,164,.65); }
-  .ev.locked .ev-time { color: rgba(216,201,164,.4); }
-  .ev.locked::before {
-    /* dim bullet for locked entries */
-    background: radial-gradient(circle at 30% 30%, #6a4a26, #1a0c06 70%);
-    box-shadow: 0 0 8px rgba(120,90,40,.55);
+  .chain-band svg {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 20px; height: 100%;
+    transform: translate(-50%, -50%);
+    opacity: .55;
   }
+  /* Padlock icon centered on the seal band */
+  .seal-icon {
+    position: absolute;
+    right: 16px; top: 50%;
+    transform: translateY(-50%);
+    width: 28px; height: 28px;
+    color: rgba(216,170,90,.9);
+    filter: drop-shadow(0 0 8px rgba(194,69,58,.45));
+    transition: transform .35s ease;
+    pointer-events: none;
+  }
+  .seal-icon svg { width: 100%; height: 100%; }
+
   .ev.locked:hover {
     transform: translateX(4px);
     border-color: rgba(180,140,60,.7);
     background: linear-gradient(135deg, rgba(30,12,8,.55), rgba(50,18,10,.30));
     box-shadow: 0 0 22px rgba(120,90,40,.45);
   }
-  .ev.locked:hover::before {
-    transform: translateY(-50%) scale(1.18);
-    box-shadow: 0 0 14px rgba(200,150,70,.85), 0 0 24px rgba(120,90,40,.5);
-  }
-  .ev.locked:hover .seal-icon { transform: translateY(-50%) rotate(-8deg) scale(1.05); }
-  .ev.locked:hover .chain-band { opacity: .95; }
-
-  /* Diagonal chain band across the locked card */
-  .chain-band {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: .8;
-    overflow: hidden;
-    border-radius: inherit;
-  }
-  .chain-band svg {
-    position: absolute;
-    top: 50%; left: 0;
-    width: 100%; height: 70%;
-    transform: translateY(-50%);
-    opacity: .55;
-  }
-  /* Lock/seal icon on the right of the card */
-  .seal-icon {
-    position: absolute;
-    right: 18px; top: 50%;
-    transform: translateY(-50%);
-    width: 30px; height: 30px;
-    color: rgba(216,170,90,.85);
-    filter: drop-shadow(0 0 8px rgba(194,69,58,.45));
-    transition: transform .35s ease;
-    pointer-events: none;
-  }
-  .seal-icon svg { width: 100%; height: 100%; }
+  .ev.locked:hover .seal-icon  { transform: translateY(-50%) rotate(-8deg) scale(1.08); }
+  .ev.locked:hover .chain-band { background: linear-gradient(270deg, rgba(80,24,10,.6) 0%, rgba(80,24,10,0) 100%); }
+  .ev.locked:hover .chain-band svg { opacity: .85; }
 
   /* ---------- Seal modal (mystical "unavailable" message) ---------- */
   .seal-modal {
@@ -725,22 +720,23 @@
   ];
 
   // Reusable SVG snippets
+  // Vertical chain (fills the right-side seal band)
   const CHAIN_SVG = `
-    <svg viewBox="0 0 600 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 20 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="chainGrad" x1="0" x2="1" y1="0" y2="0">
+        <linearGradient id="chainGrad" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0%"  stop-color="rgba(120,90,40,0)"/>
-          <stop offset="20%" stop-color="rgba(180,140,60,.55)"/>
-          <stop offset="50%" stop-color="rgba(216,170,90,.85)"/>
-          <stop offset="80%" stop-color="rgba(180,140,60,.55)"/>
+          <stop offset="18%" stop-color="rgba(180,140,60,.55)"/>
+          <stop offset="50%" stop-color="rgba(216,170,90,.95)"/>
+          <stop offset="82%" stop-color="rgba(180,140,60,.55)"/>
           <stop offset="100%" stop-color="rgba(120,90,40,0)"/>
         </linearGradient>
       </defs>
-      <g stroke="url(#chainGrad)" stroke-width="3" fill="none">
-        ${Array.from({length: 14}).map((_, i) => {
-          const cx = 20 + i*42;
+      <g stroke="url(#chainGrad)" stroke-width="1.6" fill="none">
+        ${Array.from({length: 10}).map((_, i) => {
+          const cy = 10 + i * 20;
           const rot = i % 2 === 0 ? 0 : 90;
-          return `<ellipse cx="${cx}" cy="30" rx="14" ry="7" transform="rotate(${rot} ${cx} 30)"/>`;
+          return `<ellipse cx="10" cy="${cy}" rx="4.5" ry="8" transform="rotate(${rot} 10 ${cy})"/>`;
         }).join('')}
       </g>
     </svg>`;
