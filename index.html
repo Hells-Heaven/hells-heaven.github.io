@@ -2287,6 +2287,8 @@
       number: "HH6",
       title: "Hell's Civil War",
       time: "Year 2032",
+      portrait: "sigil-servant.png",
+      portraitAlt: "The Servant rising over the world",
       lore: "The crown that had never been broken from the outside was broken from within. Hell turned upon itself: the Servant raised his insurgency against the Demon King, and the whole of the dark kingdom split between those who kept the old order and those who would end it. Between the two armies moved the Wanderers, four survivors of Tartarus who wanted no throne at all — only the road out. The war was decided in its first minute, in a room where a sleeping man could not answer to his own name, and it ended four days later in the Deadlands, where death is permanent and the King went walking alone.",
       settingText: "Hell",
       settingLocations: [
@@ -2615,6 +2617,13 @@
         </div>
       </section>`
       : `
+      ${data.portrait ? `
+      <section class="hh-section status-section">
+        <div class="servant-frame">
+          <div class="servant-aura"></div>
+          <img class="servant-portrait" src="${data.portrait}" alt="${data.portraitAlt || ''}">
+        </div>
+      </section>` : ''}
       <section class="hh-section">
         <h2 class="hh-section-title">Lore</h2>
         <p class="lore-text">${data.lore}</p>
