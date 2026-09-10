@@ -2147,7 +2147,7 @@
           members: [
             { tag: "Lyfalda",  role: "Demon King", headline: true },
             { tag: "Sourav5",  role: "Servant" },
-            { tag: "Shikamaru",role: "Spy" },
+            { tag: "Shikamaru",role: "Lucifer" },
             { tag: "Ansfe",    role: "Fool" },
             { tag: "Othmane",  role: "Normal Dude" },
             { tag: "Zay",      role: "Normal Dude" },
@@ -3047,12 +3047,20 @@
       return out;
     }
     const demonKings = lineage(r => /demon king/i.test(r));
-    const servants = lineage(r => /^the servant$|^servant$/i.test(r));
+    // The Serpent of Helios is the same office under its oldest name — HH7 is the
+    // chapter the title comes from, not a separate one.
+    const servants = lineage(r => /^the servant$|^servant$/i.test(r) || /^the serpent$/i.test(r));
     const chosenOnes = lineage(r => /chosen one/i.test(r));
+
+    // The deception role is renamed every chapter but is always the same seat: the one
+    // who reads as the other side. Lucifer mirrors the Spy in HH1, the Fallen Angel
+    // mirrors the God of Mischief in HH3 and HHX, and the Frost Titan mirrors the
+    // Fallen Angel in HH5.
+    const isSpyRole = r => /^(the )?(spy|lucifer|fallen angel|god of mischief|frost titan)$/i.test(r || '');
     const spies = (() => {
       const m = {};
       arr.forEach(p => {
-        const n = p.roles.filter(r => r.role === 'Spy').length;
+        const n = p.roles.filter(r => isSpyRole(r.role)).length;
         if (n > 0) m[p.tag] = n;
       });
       return Object.entries(m).sort((a,b) => b[1] - a[1]);
@@ -3222,6 +3230,7 @@
           </article>
           <article class="hof-card">
             <h3>The Spies</h3>
+            <p class="hof-desc">One seat, five names — Spy, Lucifer, Fallen Angel, God of Mischief, Frost Titan</p>
             <ol class="hof-rank">${list(spies, ([tag,n]) => `<li><b>${tag}</b><span class="hof-val">${n}</span></li>`)}</ol>
           </article>
         </div>
