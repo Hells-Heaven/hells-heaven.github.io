@@ -1470,6 +1470,44 @@
     pointer-events: none;
   }
 
+  /* Every victor carries the same gold, whatever banner they fought under — including the
+     lone winners inside a losing faction, who have no faction crown to mark them. */
+  .player-card.won {
+    border-color: rgba(232,199,90,.85);
+    background: linear-gradient(135deg, rgba(58,42,12,.6), rgba(38,26,8,.3));
+    box-shadow:
+      0 0 26px rgba(232,199,90,.32),
+      inset 0 0 20px rgba(232,199,90,.08);
+    animation: victorAura 4s ease-in-out infinite;
+  }
+  .player-card.won .role { color: rgba(240,214,130,.95); }
+  .player-card.won .tag  { text-shadow: 0 0 14px rgba(232,199,90,.7); }
+  .player-card.won:hover {
+    animation: none;
+    background: linear-gradient(135deg, rgba(74,54,16,.68), rgba(50,34,10,.36));
+    box-shadow:
+      0 10px 24px rgba(0,0,0,.6),
+      inset 0 1px 0 rgba(255,255,255,.14),
+      0 0 38px rgba(232,199,90,.55),
+      inset 0 0 24px rgba(232,199,90,.14);
+  }
+  @keyframes victorAura {
+    0%, 100% {
+      box-shadow:
+        0 6px 16px rgba(0,0,0,.55),
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 0 22px rgba(232,199,90,.26),
+        inset 0 0 18px rgba(232,199,90,.07);
+    }
+    50% {
+      box-shadow:
+        0 6px 16px rgba(0,0,0,.55),
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 0 34px rgba(232,199,90,.46),
+        inset 0 0 22px rgba(232,199,90,.13);
+    }
+  }
+
   /* Victor player cards — slightly more 3D. Border/text colors stay with the faction palette;
      winner state adds depth shadows + a soft top highlight that feels lifted from the page. */
   .cast-faction.winner .player-card {
@@ -1752,6 +1790,14 @@
     .ring-outer, .ring-mid, .ring-inner,
     .logo-glow, .logo,
     .cast-faction-sigil, .mvp-section-logo img { animation: none; }
+    .player-card.won {
+      animation: none;
+      box-shadow:
+        0 6px 16px rgba(0,0,0,.55),
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 0 28px rgba(232,199,90,.36),
+        inset 0 0 20px rgba(232,199,90,.10);
+    }
   }
 </style>
 </head>
@@ -2582,11 +2628,14 @@
           ${f.winner ? `<div class="faction-victors">Victors</div>` : ''}
         </div>
         <div class="cast-grid">
-          ${f.members.map(m => `
-            <div class="player-card${m.headline ? ' headline' : ''}">
+          ${f.members.map(m => {
+            const won = m.won !== undefined ? m.won : !!f.winner;
+            return `
+            <div class="player-card${m.headline ? ' headline' : ''}${won ? ' won' : ''}">
               <span class="role">${m.role}</span>
               <span class="tag">${m.tag}</span>
-            </div>`).join('')}
+            </div>`;
+          }).join('')}
         </div>
       </div>`;
     }).join('');
