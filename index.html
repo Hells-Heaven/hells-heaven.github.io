@@ -1006,6 +1006,27 @@
     border-bottom: 1px dashed rgba(216,170,90,.15);
   }
   .hof-lineage li:last-child { border-bottom: none; }
+  /* Heads a run of lineage rows when one card holds more than one pairing. */
+  .hof-nem {
+    font-family: 'Cinzel', Georgia, serif;
+    letter-spacing: .14em;
+    font-size: 13.5px;
+    color: #f3e7d0;
+    margin: 1.5em 0 .5em;
+  }
+  .hof-nem span {
+    color: rgba(216,170,90,.7);
+    margin: 0 .4em;
+  }
+  /* Trails a ranked list to say something about whoever currently sits at the top. */
+  .hof-under {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: rgba(216,201,164,.6);
+    margin: 1.1em 0 0;
+  }
   .hof-hh {
     font-family: 'Cinzel', Georgia, serif;
     font-size: 11px;
@@ -2835,6 +2856,24 @@
     { hh: 'HH1v2', tag: 'Parther', won: true },
   ];
 
+  // The chronicle does not track kills. Most deaths in the record have no named
+  // author — the Warden took ten men in HH5 alone, and a wheel has taken more since.
+  // What is recorded here is the narrow case where one player is on the record as
+  // the reason another was finished, because that is what makes a repeat mean
+  // something. A single entry is a bad day. The same two names twice is a habit.
+  const UNDOINGS = [
+    { hh: 'HH2', by: 'Oldestdream', of: 'Sourav', how: 'Killed him outright' },
+    { hh: 'HH5', by: 'Oldestdream', of: 'Sourav', how: 'Walked him into the Warden' },
+  ];
+
+  // Measured in chapter-days, which is why a half exists: HH6 resolved twice a day,
+  // at dawn and at midday, so its midday was half a day in. Only a recorded
+  // resolution counts — HH7's day-one loss was a withdrawal taken as the day's
+  // death, and a player who leaves was never killed.
+  const SWIFT_ENDS = [
+    { hh: 'HH6', tag: 'Tragicboy', day: 0.5, how: 'The Warden, destroyed at midday by his own Dullahan — before he had posted a single word.' },
+  ];
+
   function buildHOFStats() {
     const players = {};
     const pGet = t => players[t] || (players[t] = {
@@ -3086,11 +3125,27 @@
     const strongest = Object.entries(ps2.teamWins).filter(([_, w]) => w >= 2).sort((a,b) => b[1] - a[1]).slice(0, 6);
     const rivalry = Object.entries(ps2.oppCount).filter(([_, n]) => n >= 2).sort((a,b) => b[1] - a[1]).slice(0, 8);
 
+    // A rivalry is a pairing. This is not — it only has one direction, and it only
+    // counts once the same hand has done it twice. If it ever happens again to
+    // anybody, it will find itself.
+    const ORD2 = { HH1:0, HH1v2:1, HH2:2, HH3:3, HH4:4, HH5:5, HHX:6, HH6:7, HH7:8 };
+    const nemesis = Object.values(UNDOINGS.reduce((acc, u) => {
+      const key = u.by + ' ' + u.of;
+      (acc[key] || (acc[key] = { by: aliasOf(u.by), of: aliasOf(u.of), items: [] })).items.push(u);
+      return acc;
+    }, {}))
+      .filter(g => g.items.length >= 2)
+      .map(g => ({ ...g, items: g.items.slice().sort((a, b) => ORD2[a.hh] - ORD2[b.hh]) }))
+      .sort((a, b) => b.items.length - a.items.length);
+
     // ---- Single-game ----
+    // HH7 splits the gods into groups by what they can perceive, not by allegiance.
+    // Those are not factions and do not belong in faction records.
+    const isFaction = f => !f.noAlignment;
     const allFac = [];
     HH_ORDER.forEach(k => {
       const r = HH_DATA[k]; if (!r || !r.factions) return;
-      r.factions.forEach(f => allFac.push({ hh: k.toUpperCase(), name: f.name, size: f.members.length, won: !!f.winner }));
+      r.factions.filter(isFaction).forEach(f => allFac.push({ hh: k.toUpperCase(), name: f.name, size: f.members.length, won: !!f.winner }));
     });
     const largest = [...allFac].sort((a,b) => b.size - a.size).slice(0, 3);
     // Lopsidedness is the winners' share of the whole chapter, not raw headcount — and
@@ -3099,12 +3154,17 @@
     HH_ORDER.forEach(k => {
       const r = HH_DATA[k]; if (!r || !r.factions) return;
       const total = r.factions.reduce((n, f) => n + f.members.length, 0);
-      r.factions.forEach(f => {
+      r.factions.filter(isFaction).forEach(f => {
         const won = f.members.filter(m => (m.won !== undefined ? m.won : !!f.winner)).length;
         if (won) winGroups.push({ hh: k.toUpperCase(), name: f.name, size: won, total });
       });
     });
     const lopsided = winGroups.sort((a,b) => (a.size / a.total) - (b.size / b.total)).slice(0, 3);
+
+    const swiftest = SWIFT_ENDS
+      .map(e => ({ ...e, tag: aliasOf(e.tag) }))
+      .sort((a, b) => a.day - b.day)
+      .slice(0, 3);
 
     // ---- Render ----
     const list = (rows, render) => rows.length ? rows.map(render).join('') : '<div class="hof-empty">—</div>';
@@ -3274,6 +3334,14 @@
             <h3>Greatest Rivalries — Most Often Opposed</h3>
             <ol class="hof-rank">${list(rivalry, ([pair, n]) => `<li><b>${pair}</b><span class="hof-val">${n}×</span></li>`)}</ol>
           </article>
+          ${nemesis.length ? `
+          <article class="hof-card wide">
+            <h3>Nemesis — Undone Twice by the Same Hand</h3>
+            <p class="hof-desc">A rivalry runs both ways. This only runs one.</p>
+            ${nemesis.map(g => `
+            <p class="hof-nem">${g.by}<span>→</span>${g.of}</p>
+            <ul class="hof-lineage">${g.items.map(i => `<li><span class="hof-hh">${i.hh}</span><span class="hof-name">${i.how}</span></li>`).join('')}</ul>`).join('')}
+          </article>` : ''}
         </div>
       </section>
 
@@ -3289,8 +3357,15 @@
             <p class="hof-desc">Smallest faction that walked away as winner</p>
             <ol class="hof-rank">${list(lopsided, f => `<li><b>${f.name}</b> <span class="hof-hh">${f.hh}</span><span class="hof-val">${f.size} of ${f.total}</span></li>`)}</ol>
           </article>
+          ${swiftest.length ? `
+          <article class="hof-card">
+            <h3>Fastest Death</h3>
+            <p class="hof-desc">Shortest anyone has lasted in a chapter</p>
+            <ol class="hof-rank">${list(swiftest, e => `<li><b>${e.tag}</b> <span class="hof-hh">${e.hh}</span><span class="hof-val">Day ${e.day}</span></li>`)}</ol>
+            <p class="hof-under">${swiftest[0].how}</p>
+          </article>` : ''}
         </div>
-        <p class="hof-quote">The narrowest victories belong to no army at all. One Angel walked out of Hell alone; one god walked out of Ragnarok alone. Neither needed anybody else to win, and neither took anybody with them.</p>
+        <p class="hof-quote">One Angel walked out of Hell alone, and not even his own side came with him. Ragnarok ended narrower still, but Helios had no armies — and a lone god cannot be measured against a faction that never existed.</p>
       </section>
 
       <div class="hof-foot">⛧ Carved beneath the Eternal Sky ⛧</div>
