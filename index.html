@@ -823,6 +823,35 @@
     line-height: 1.7;
     color: rgba(243,231,208,.78);
   }
+  .hof-scroll {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4.5em;
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: clamp(10px, 1.2vmin, 12px);
+    letter-spacing: .55em;
+    text-transform: uppercase;
+    color: rgba(216,170,90,.6);
+    text-shadow: 0 0 14px rgba(216,170,90,.35);
+    padding-left: .55em;
+    pointer-events: none;
+  }
+  .hof-scroll svg {
+    width: 22px;
+    height: 12px;
+    display: block;
+    margin-left: -.55em;   /* undo the letter-spacing pad so the chevron sits centred */
+    animation: hofScrollBob 2.2s ease-in-out infinite;
+  }
+  @keyframes hofScrollBob {
+    0%, 100% { transform: translateY(-4px); opacity: .45; }
+    50%      { transform: translateY(4px);  opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hof-scroll svg { animation: none; }
+  }
 
   /* Sections */
   .hof-section {
@@ -1047,6 +1076,15 @@
     transition: opacity 1.1s ease 1.0s;   /* arrives as the logo finishes its journey */
   }
   body[class*="view-hh"] .dashboard { opacity: 1; }
+
+  /* Both views keep their rendered markup between navigations, so the inactive one
+     would otherwise reserve a screen or more of empty space above the active one. */
+  body:not([class*="view-hh"]) .dashboard,
+  body:not(.view-hof) .hof {
+    min-height: 0;
+    height: 0;
+    overflow: hidden;
+  }
 
   /* ---------- HH Hero Header ---------- */
   .hh-header {
@@ -1418,6 +1456,38 @@
     letter-spacing: .03em;
     text-shadow: 0 0 12px var(--glow);
   }
+  /* Archetype badge — sits beside the name for chapters where the group a player
+     belongs to and what they actually are are two different things. */
+  .player-name-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .player-archetype {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 9px;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    padding: 4px 10px 4px calc(10px + .3em);
+    border: 1px solid rgba(200,180,230,.35);
+    border-radius: 3px;
+    color: rgba(214,198,240,.85);
+    background: rgba(40,26,60,.35);
+    white-space: nowrap;
+  }
+  .player-archetype.arch-serpent {
+    border-color: rgba(120,215,150,.6);
+    color: rgba(170,240,190,.95);
+    background: rgba(14,44,26,.45);
+    text-shadow: 0 0 14px rgba(120,215,150,.45);
+  }
+  .player-archetype.arch-man {
+    border-color: rgba(240,205,140,.6);
+    color: rgba(250,226,170,.95);
+    background: rgba(52,38,14,.45);
+    text-shadow: 0 0 14px rgba(240,205,140,.45);
+  }
   /* Special highlight cards for headline roles */
   .player-card.headline {
     background: linear-gradient(135deg, rgba(60,18,12,.65), rgba(40,10,10,.3));
@@ -1470,42 +1540,41 @@
     pointer-events: none;
   }
 
-  /* Every victor carries the same gold, whatever banner they fought under — including the
-     lone winners inside a losing faction, who have no faction crown to mark them. */
+  /* A player who wins while their faction falls has no faction crown to stand under,
+     so the card carries its own. */
   .player-card.won {
-    border-color: rgba(232,199,90,.85);
-    background: linear-gradient(135deg, rgba(58,42,12,.6), rgba(38,26,8,.3));
-    box-shadow:
-      0 0 26px rgba(232,199,90,.32),
-      inset 0 0 20px rgba(232,199,90,.08);
-    animation: victorAura 4s ease-in-out infinite;
+    --victor: rgba(255,200,110,.85);
+    --victor-soft: rgba(255,180,80,.4);
+    position: relative;
+    padding-right: 92px;
   }
-  .player-card.won .role { color: rgba(240,214,130,.95); }
-  .player-card.won .tag  { text-shadow: 0 0 14px rgba(232,199,90,.7); }
-  .player-card.won:hover {
-    animation: none;
-    background: linear-gradient(135deg, rgba(74,54,16,.68), rgba(50,34,10,.36));
-    box-shadow:
-      0 10px 24px rgba(0,0,0,.6),
-      inset 0 1px 0 rgba(255,255,255,.14),
-      0 0 38px rgba(232,199,90,.55),
-      inset 0 0 24px rgba(232,199,90,.14);
+  .player-victor {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    pointer-events: none;
   }
-  @keyframes victorAura {
-    0%, 100% {
-      box-shadow:
-        0 6px 16px rgba(0,0,0,.55),
-        inset 0 1px 0 rgba(255,255,255,.08),
-        0 0 22px rgba(232,199,90,.26),
-        inset 0 0 18px rgba(232,199,90,.07);
-    }
-    50% {
-      box-shadow:
-        0 6px 16px rgba(0,0,0,.55),
-        inset 0 1px 0 rgba(255,255,255,.08),
-        0 0 34px rgba(232,199,90,.46),
-        inset 0 0 22px rgba(232,199,90,.13);
-    }
+  .player-victor .player-crown {
+    width: 32px;
+    height: 19px;
+    color: var(--victor);
+    filter: drop-shadow(0 0 10px var(--victor-soft));
+  }
+  .player-victor .player-crown svg { width: 100%; height: 100%; display: block; }
+  .player-victor .player-victor-label {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 9px;
+    letter-spacing: .4em;
+    text-transform: uppercase;
+    color: var(--victor);
+    padding-left: .4em;
+    text-shadow: 0 0 16px var(--victor-soft);
+    white-space: nowrap;
   }
 
   /* Victor player cards — slightly more 3D. Border/text colors stay with the faction palette;
@@ -1790,14 +1859,6 @@
     .ring-outer, .ring-mid, .ring-inner,
     .logo-glow, .logo,
     .cast-faction-sigil, .mvp-section-logo img { animation: none; }
-    .player-card.won {
-      animation: none;
-      box-shadow:
-        0 6px 16px rgba(0,0,0,.55),
-        inset 0 1px 0 rgba(255,255,255,.08),
-        0 0 28px rgba(232,199,90,.36),
-        inset 0 0 20px rgba(232,199,90,.10);
-    }
   }
 </style>
 </head>
@@ -2174,17 +2235,17 @@
       mvps: [
         {
           rank: 1, rankNumeral: "I",
-          tag: "Drahsin",
-          faction: "Rebels",
-          role: "Spy",
-          text: "Drahsin moved in shadow from the first hour. As Spy he bound the Servant and the Killer into one mind, three blades drawn in unison from the same dark. When the Knight Commander cut down Deva and the Servant's voice fell silent, Drahsin took the mantle for his own. He outmaneuvered the Knight Commander who had felled his master, and reached across the war to find the Innocent waiting in the king's own court. Together they wrote the king's ending. Where one Servant fell, another rose without pause, and the rebellion never lost its breath."
-        },
-        {
-          rank: 2, rankNumeral: "II",
           tag: "Vanetails",
           faction: "Rebels",
           role: "Innocent",
           text: "Vanetails played the Innocent, and the court believed her without question. That belief was the only weapon she ever drew. From inside the king's halls she pulled his people away from him, one by one. A guard sent on a long ride to nothing. A noble called to answer a crisis that did not exist. The king never saw his court growing quieter around him. When her hand fell, Solaria's gates already stood unguarded, and the rebels poured into a palace gone silent. They found him alone in his own throne room, sitting on a throne already lost. The greatest empire of mortal kind ended with a single Innocent at the heart of it, and a king who never once suspected her."
+        },
+        {
+          rank: 2, rankNumeral: "II",
+          tag: "Drahsin",
+          faction: "Rebels",
+          role: "Spy",
+          text: "Drahsin moved in shadow from the first hour. As Spy he bound the Servant and the Killer into one mind, three blades drawn in unison from the same dark. When the Knight Commander cut down Deva and the Servant's voice fell silent, Drahsin took the mantle for his own. He outmaneuvered the Knight Commander who had felled his master, and reached across the war to find the Innocent waiting in the king's own court. Together they wrote the king's ending. Where one Servant fell, another rose without pause, and the rebellion never lost its breath."
         },
         {
           rank: 3, rankNumeral: "III",
@@ -2258,7 +2319,31 @@
       title: "The Invasion of Middle Earth",
       time: "Year 2030",
       lore: "The Devils retreated from the second war with Heaven still bleeding behind them. They had bled the heavens and walked back into Hell undefeated, and the silence that followed did not last long. With Heaven's host still gathering itself, the Demon King turned once more toward Middle Earth. The hand that had stolen Aetherion in whispers came back this time as armies. The Angels could not stand aside, but neither could they yet stand in full. They sent what host they could spare to defend the mortal world. It was not enough. The Devils carved through the kingdoms of Middle Earth, and the few Angels who came to hold them fell with the cities they had been sent to save. When the war ended, Middle Earth lay in ruin, and Hell stood across the bones of the world it had broken.",
-      settingText: "Middle Earth"
+      settingText: "Middle Earth",
+
+      // The full 22-player roster with factions was never posted, so HH4 has no cast
+      // page. What the Announcement channel does record is who took part and who was
+      // left standing, which is enough to keep the Hall of Fame honest. Only three
+      // players won; the surviving Reds are not among them.
+      //
+      // mvp is the player's place on HH4's leaderboard, which ran seven deep. First
+      // place belongs to a player who appears nowhere else in the chronicle, so the
+      // chapter contributes no top crown. lmvp is a place on HH4's worst-player list,
+      // the only one the series ever published.
+      resultsOnly: [
+        { tag: "Asta",             won: true,  mvp: 3 },
+        { tag: "Sourav5",          won: true,  mvp: 2 },
+        { tag: "Ansh",             won: false },
+        { tag: "Ali",              won: false },
+        { tag: "Luci",             won: false },
+        { tag: "King of Treasure", won: false, mvp: 6 },
+        { tag: "Gildarts",         won: false },
+        { tag: "Silvermist",       won: false },
+        { tag: "Oldestdream",      won: false, lmvp: 3 },
+        { tag: "Cupid",            won: false, mvp: 7 },
+        { tag: "Thekindone",       won: false },
+        { tag: "Vanetails",        won: false, mvp: 4 },
+      ],
     },
     hh5: {
       number: "HH5",
@@ -2499,11 +2584,11 @@
           sigil: null,
           noAlignment: true,
           members: [
-            { tag: "Igris",       role: "The Serpent", headline: true, won: true },
-            { tag: "Ansfe",       role: "The Man", headline: true },
-            { tag: "Deva",        role: "God" },
-            { tag: "Silver Mist", role: "God" },
-            { tag: "Ali",         role: "God" },
+            { tag: "Igris",       role: "The Serpent", archetype: "The Serpent", headline: true, won: true },
+            { tag: "Ansfe",       role: "The Man",     archetype: "The Man",     headline: true },
+            { tag: "Deva",        role: "God", archetype: "God" },
+            { tag: "Silver Mist", role: "God", archetype: "God" },
+            { tag: "Ali",         role: "God", archetype: "God" },
           ]
         },
         {
@@ -2512,11 +2597,11 @@
           sigil: null,
           noAlignment: true,
           members: [
-            { tag: "Sourav5",   role: "God" },
-            { tag: "Tragicboy", role: "God" },
-            { tag: "Paps",      role: "God" },
-            { tag: "Cupid",     role: "God" },
-            { tag: "Ssbakbar",  role: "God" },
+            { tag: "Sourav5",   role: "God", archetype: "God" },
+            { tag: "Tragicboy", role: "God", archetype: "God" },
+            { tag: "Paps",      role: "God", archetype: "God" },
+            { tag: "Cupid",     role: "God", archetype: "God" },
+            { tag: "Ssbakbar",  role: "God", archetype: "God" },
           ]
         },
         {
@@ -2525,11 +2610,11 @@
           sigil: null,
           noAlignment: true,
           members: [
-            { tag: "Thekindone",       role: "God" },
-            { tag: "Parther",          role: "God" },
-            { tag: "Ansh",             role: "God" },
-            { tag: "King of Treasure", role: "God" },
-            { tag: "Lumi",             role: "God" },
+            { tag: "Thekindone",       role: "God", archetype: "God" },
+            { tag: "Parther",          role: "God", archetype: "God" },
+            { tag: "Ansh",             role: "God", archetype: "God" },
+            { tag: "King of Treasure", role: "God", archetype: "God" },
+            { tag: "Lumi",             role: "God", archetype: "God" },
           ]
         }
       ],
@@ -2630,10 +2715,26 @@
         <div class="cast-grid">
           ${f.members.map(m => {
             const won = m.won !== undefined ? m.won : !!f.winner;
+            // Only a victor whose own faction lost needs marking here; the rest already
+            // stand under the faction crown.
+            const soloVictor = won && !f.winner;
+            const archClass = m.archetype
+              ? ' arch-' + m.archetype.replace(/^The\s+/i, '').toLowerCase()
+              : '';
+            const roleHtml = m.role && m.role !== m.archetype
+              ? `<span class="role">${m.role}</span>` : '';
             return `
-            <div class="player-card${m.headline ? ' headline' : ''}${won ? ' won' : ''}">
-              <span class="role">${m.role}</span>
-              <span class="tag">${m.tag}</span>
+            <div class="player-card${m.headline ? ' headline' : ''}${soloVictor ? ' won' : ''}">
+              ${roleHtml}
+              <div class="player-name-row">
+                <span class="tag">${m.tag}</span>
+                ${m.archetype ? `<span class="player-archetype${archClass}">${m.archetype}</span>` : ''}
+              </div>
+              ${soloVictor ? `
+              <div class="player-victor">
+                <div class="player-crown">${CROWN_SVG}</div>
+                <span class="player-victor-label">Victor</span>
+              </div>` : ''}
             </div>`;
           }).join('')}
         </div>
@@ -2740,6 +2841,8 @@
       apps: 0, wins: 0, losses: 0, ongoing: 0,
       mvp1: 0, mvp2: 0, mvp3: 0, mvpTotal: 0,
       mvpInLoss: [],
+      mvpPlaces: [],              // {hh, rank}
+      lmvpPlaces: [],             // {hh, place} — worst-player lists
       roles: [],                  // {hh, role, headline, faction, outcome}
       hhs: new Set(),
       factionsPlayed: [],
@@ -2774,6 +2877,7 @@
             if (!players[t]) return;
             const p = players[t];
             p.mvpTotal++;
+            p.mvpPlaces.push({ hh: label, rank: mv.rank });
             if (mv.rank === 1) p.mvp1++;
             else if (mv.rank === 2) p.mvp2++;
             else if (mv.rank === 3) p.mvp3++;
@@ -2781,6 +2885,28 @@
             if (r && r.outcome === 'lost') p.mvpInLoss.push(label);
           });
         }
+      } else if (rec.resultsOnly && rec.resultsOnly.length) {
+        // A chapter with a known result but no surviving roster. It counts toward a
+        // player's record and sits in its true place in the timeline, so streaks and
+        // consecutive runs read correctly — but it carries no role, faction or pairing.
+        rec.resultsOnly.forEach(r => {
+          const p = pGet(aliasOf(r.tag));
+          const outcome = r.won ? 'won' : 'lost';
+          p.apps++;
+          p.hhs.add(label);
+          p.roles.push({ hh: label, role: null, headline: false, faction: null, outcome });
+          if (r.won) p.wins++; else p.losses++;
+          p.history.push({ hh: label, outcome });
+          if (r.mvp) {
+            p.mvpTotal++;
+            p.mvpPlaces.push({ hh: label, rank: r.mvp });
+            if (r.mvp === 1) p.mvp1++;
+            else if (r.mvp === 2) p.mvp2++;
+            else if (r.mvp === 3) p.mvp3++;
+            if (outcome === 'lost') p.mvpInLoss.push(label);
+          }
+          if (r.lmvp) p.lmvpPlaces.push({ hh: label, place: r.lmvp });
+        });
       } else if (rec.participants && rec.participants.length) {
         rec.participants.forEach(tag => {
           const t = aliasOf(tag);
@@ -2894,6 +3020,16 @@
     const mvpRate = topN(arr.filter(p => p.apps >= 2 && p.mvpTotal > 0), 6, p => p.mvpTotal / p.apps);
     const heroic = arr.filter(p => p.mvpInLoss.length > 0);
 
+    // A player named on a worst-player list who was later named among the best.
+    const ORD = { HH1:0, HH2:1, HH3:2, HH4:3, HH5:4, HHX:5, HH6:6, HH7:7 };
+    const comeback = arr.filter(p => p.lmvpPlaces.length).map(p => {
+      const low = p.lmvpPlaces.reduce((a, b) => ORD[a.hh] <= ORD[b.hh] ? a : b);
+      const rise = p.mvpPlaces
+        .filter(m => ORD[m.hh] > ORD[low.hh])
+        .sort((a, b) => a.rank - b.rank || ORD[a.hh] - ORD[b.hh])[0];
+      return rise ? { tag: p.tag, low, rise, gap: ORD[rise.hh] - ORD[low.hh] } : null;
+    }).filter(Boolean).sort((a, b) => a.rise.rank - b.rise.rank || a.gap - b.gap);
+
     // ---- Roles ----
     const distinct = topN(arr, 6, p => p.distinctRoles.size);
     const headliners = topN(arr, 6, p => p.headlineCount);
@@ -2971,6 +3107,10 @@
         <h1 class="hof-title">Hall of Fame</h1>
         <div class="hof-flourish"></div>
         <p class="hof-lede">Names carved into the marble of the dark. Every clash, every wound, every breath of victory tallied beneath the same eternal sky.</p>
+        <div class="hof-scroll">
+          <span>Scroll Down</span>
+          <svg viewBox="0 0 22 12" fill="none" aria-hidden="true"><path d="M2 2l9 8 9-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
       </div>
 
       <section class="hof-section">
@@ -3047,8 +3187,13 @@
             <p class="hof-desc">MVPs whose faction still fell</p>
             <ul class="hof-rank">${list(heroic, p => `<li><b>${p.tag}</b><span class="hof-val">${p.mvpInLoss.join(', ')}</span></li>`)}</ul>
           </article>
+          <article class="hof-card wide">
+            <h3>Best Comeback</h3>
+            <p class="hof-desc">Named among the worst, then named among the best</p>
+            <ul class="hof-rank">${list(comeback, c => `<li><b>${c.tag}</b><span class="hof-val">${c.low.hh} worst #${c.low.place} → ${c.rise.hh} MVP #${c.rise.rank}</span></li>`)}</ul>
+          </article>
         </div>
-        <p class="hof-quote">Vanetails has never put on the armor without leaving with a crown — every chapter she has fought, she has been named among the best.</p>
+        <p class="hof-quote">Vanetails is the only name in the chronicle crowned first twice, and she took both in a row. Three wars, three times named among the best, and then she never played again.</p>
       </section>
 
       <section class="hof-section">
