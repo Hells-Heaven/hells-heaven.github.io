@@ -57,7 +57,7 @@
   #embers { position: fixed; inset: 0; z-index: 3; pointer-events: none; }
 
   /* ---------- Scene container ---------- */
-  /* Pinned to the top of the viewport at full viewport height ‚Äî the logo lives here in every view.
+  /* Pinned to the top of the viewport at full viewport height — the logo lives here in every view.
      Pointer-events disabled so it never blocks dashboard scroll/click. */
   .scene {
     position: absolute;
@@ -390,7 +390,7 @@
       inset 0 0 14px rgba(0,0,0,.55);
   }
   .ev.alt-ev::before {
-    display: none;     /* no bullet ‚Äî disconnected from the timeline */
+    display: none;     /* no bullet — disconnected from the timeline */
   }
   .ev.alt-ev::after { display: none; }
   .ev.alt-ev .ev-name {
@@ -636,7 +636,7 @@
   body.view-lore    .dashboard-only { opacity: 0; pointer-events: none; transition: opacity .45s ease; }
   body[class*="view-hh"] .landing-only,
   body[class*="view-hh"] .lore-only { opacity: 0; pointer-events: none; transition: opacity .45s ease; }
-  /* Logo position on dashboard views ‚Äî uses viewport units to match landing/lore reference frame. */
+  /* Logo position on dashboard views — uses viewport units to match landing/lore reference frame. */
   body[class*="view-hh"] .logo-cluster {
     top: 16vh;
     left: 50vw;
@@ -846,7 +846,7 @@
     position: relative;
   }
   .hof-section-title::after {
-    content: "‚ú¶";
+    content: "✦";
     display: block;
     margin: 0.45em auto 0;
     color: rgba(216,170,90,.6);
@@ -1095,7 +1095,7 @@
     position: relative;
   }
   .hh-header-flourish::before {
-    content: "‚ú¶";
+    content: "✦";
     position: absolute; top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -1199,7 +1199,7 @@
       0 2px 6px rgba(0,0,0,.85);
   }
   .setting-locations li + li::before {
-    content: "‚ú¶";
+    content: "✦";
     position: absolute;
     top: -1.05em;
     left: 50%;
@@ -1470,7 +1470,7 @@
     pointer-events: none;
   }
 
-  /* Victor player cards ‚Äî slightly more 3D. Border/text colors stay with the faction palette;
+  /* Victor player cards — slightly more 3D. Border/text colors stay with the faction palette;
      winner state adds depth shadows + a soft top highlight that feels lifted from the page. */
   .cast-faction.winner .player-card {
     box-shadow:
@@ -1577,7 +1577,7 @@
     color: transparent;
   }
 
-  /* TOP I  ‚Äî supreme: bigger card, bigger numeral, brightest glow */
+  /* TOP I  — supreme: bigger card, bigger numeral, brightest glow */
   .mvp-rank-1 {
     padding: 56px 44px 48px;
     border-color: rgba(255,170,80,.65);
@@ -1602,7 +1602,7 @@
       0 2px 8px rgba(0,0,0,.9);
   }
 
-  /* TOP II ‚Äî secondary */
+  /* TOP II — secondary */
   .mvp-rank-2 {
     border-color: rgba(216,170,90,.5);
     background:
@@ -1614,7 +1614,7 @@
     filter: drop-shadow(0 0 16px rgba(216,170,90,.55));
   }
 
-  /* TOP III ‚Äî tertiary, slightly subdued */
+  /* TOP III — tertiary, slightly subdued */
   .mvp-rank-3 {
     border-color: rgba(180,140,60,.35);
     background:
@@ -1696,7 +1696,7 @@
   /* Footer space so last MVP isn't crammed at viewport edge */
   .dash-foot { padding: 7vh 4vmin 6vh; text-align: center; }
   .dash-foot::before {
-    content: "‚ú¶";
+    content: "✦";
     display: block;
     font-size: 16px;
     color: rgba(216,170,90,.5);
@@ -1814,7 +1814,7 @@
     <div class="timeline-wrap lore-only" aria-hidden="true">
       <div class="timeline-title">Chronicle of Hells Heaven</div>
       <a href="#hof" class="hof-portal" aria-label="Enter the Hall of Fame">
-        <span class="hof-portal-label">‚õß Hall of Fame ‚õß</span>
+        <span class="hof-portal-label">⛧ Hall of Fame ⛧</span>
         <span class="hof-portal-sub">Records of those who shaped the Chronicle</span>
       </a>
       <div class="timeline" id="timeline"></div>
@@ -1824,7 +1824,7 @@
   <!-- Seal modal (shown when locked timeline entry is clicked) -->
   <div class="seal-modal" id="sealModal" role="dialog" aria-hidden="true" aria-labelledby="sealTitle">
     <div class="seal-card">
-      <button class="seal-close" id="sealClose" aria-label="Close">‚úï</button>
+      <button class="seal-close" id="sealClose" aria-label="Close">✕</button>
       <div class="seal-glyph" aria-hidden="true">
         <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="32" cy="32" r="22"/>
@@ -1898,26 +1898,26 @@
 (() => {
   // ---------- Timeline data ----------
   // Each entry: [name, time, unlocked?]
-  // HH1 ‚Äî HH7 are unlocked; everything else is sealed until released.
+  // HH1 — HH7 are unlocked; everything else is sealed until released.
   const EVENTS = [
-    ["HH7 ‚Äî Ragnarok",                                  "The Last Days of Helios",  true ],
-    ["HH8 ‚Äî The Ancient War of Remnants",               "Undocumented",            false],
-    ["HH9 ‚Äî The Age of Lostborns",                      "Year 0 ‚Äî Year 1000",      false],
-    ["HH10 ‚Äî The Cold War",                             "Year 1007 ‚Äî Year 1030",   false],
-    ["HH11 ‚Äî The Rise of Pandaemonium",                 "Year 1030 ‚Äî 1999",        false],
-    ["HH12 ‚Äî The Resurgence of the Golden Bloodline",   "1050 ‚Äî 1080",             false],
-    ["HH1 ‚Äî The First War of Hell and Heaven",          "Year 2000",               true ],
-    ["HH2 ‚Äî The Solaria Rebellion",                     "Year 2010 ‚Äî 2020",        true ],
-    ["HH3 ‚Äî The Second War of Hell and Heaven",         "Year 2024 ‚Äî 2029",        true ],
-    ["HH4 ‚Äî The Invasion of Middle Earth",              "Year 2030",               true ],
-    ["HH5 ‚Äî The Tartarus Prison Break",                 "Year 2031",               true ],
-    ["HH6 ‚Äî Hell's Civil War",                          "Year 2032",               true ],
-    ["HH13 ‚Äî The Battle of the Chosens",                "Year 2050 ‚Äî 2055",        false],
-    ["HH14 ‚Äî The Morning Star",                         "2082 ‚Äî 2096",             false],
-    ["HH15 ‚Äî The Last War of Hell and Heaven",          "Year 3000",               false],
-    ["HH16 ‚Äî The Glorious Purpose (Part 1)",            "After year 3000",         false],
-    ["HH17 ‚Äî The Glorious Purpose (Part 2)",            "After year 3000",         false],
-    ["HH18 ‚Äî The Glorious Purpose (Part 3)",            "After year 3000",         false],
+    ["HH7 — Ragnarok",                                  "The Last Days of Helios",  true ],
+    ["HH8 — The Ancient War of Remnants",               "Undocumented",            false],
+    ["HH9 — The Age of Lostborns",                      "Year 0 — Year 1000",      false],
+    ["HH10 — The Cold War",                             "Year 1007 — Year 1030",   false],
+    ["HH11 — The Rise of Pandaemonium",                 "Year 1030 — 1999",        false],
+    ["HH12 — The Resurgence of the Golden Bloodline",   "1050 — 1080",             false],
+    ["HH1 — The First War of Hell and Heaven",          "Year 2000",               true ],
+    ["HH2 — The Solaria Rebellion",                     "Year 2010 — 2020",        true ],
+    ["HH3 — The Second War of Hell and Heaven",         "Year 2024 — 2029",        true ],
+    ["HH4 — The Invasion of Middle Earth",              "Year 2030",               true ],
+    ["HH5 — The Tartarus Prison Break",                 "Year 2031",               true ],
+    ["HH6 — Hell's Civil War",                          "Year 2032",               true ],
+    ["HH13 — The Battle of the Chosens",                "Year 2050 — 2055",        false],
+    ["HH14 — The Morning Star",                         "2082 — 2096",             false],
+    ["HH15 — The Last War of Hell and Heaven",          "Year 3000",               false],
+    ["HH16 — The Glorious Purpose (Part 1)",            "After year 3000",         false],
+    ["HH17 — The Glorious Purpose (Part 2)",            "After year 3000",         false],
+    ["HH18 — The Glorious Purpose (Part 3)",            "After year 3000",         false],
     ["The Final Chapter of Hells Heaven: The Dawn of the New Sun", "",             false],
   ];
 
@@ -1969,7 +1969,7 @@
     if (!unlocked) {
       div.addEventListener('click', openSealModal);
     } else {
-      // Parse HH number from name like "HH1 ‚Äî ..." and navigate to that dashboard
+      // Parse HH number from name like "HH1 — ..." and navigate to that dashboard
       const m = name.match(/^HH(\d+)/);
       if (m) {
         const hashTarget = 'hh' + m[1];
@@ -1980,14 +1980,14 @@
     trackEl.appendChild(div);
   });
 
-  // ---------- HHX ‚Äî Alternative Timeline (disconnected, below the main chronicle) ----------
+  // ---------- HHX — Alternative Timeline (disconnected, below the main chronicle) ----------
   const altWrap = document.createElement('div');
   altWrap.className = 'alt-timeline-wrap';
   altWrap.innerHTML = `
     <div class="alt-divider"><span>Beyond the Chronicle</span></div>
     <div class="ev alt-ev" id="hhxEvent">
-      <div class="ev-name">HHX ‚Äî Alternative Timeline</div>
-      <div class="ev-time">What If ‚Äî Year 2024 ‚Äî 2029</div>
+      <div class="ev-name">HHX — Alternative Timeline</div>
+      <div class="ev-time">What If — Year 2024 — 2029</div>
     </div>`;
   timelineEl.appendChild(altWrap);
   altWrap.querySelector('#hhxEvent').addEventListener('click', () => {
@@ -2074,7 +2074,7 @@
     hh2: {
       number: "HH2",
       title: "The Solaria Rebellion",
-      time: "Year 2010 ‚Äî 2020",
+      time: "Year 2010 — 2020",
       lore: "Hell's victory was not enough. The Demon King turned his eye upon Middle Earth and sent the Servant alone. One being, charged to shake the thrones of mortals. The Servant walked into Aetherion, an empire whose banners darkened a hundred kingdoms, and he spoke. He raised no armies. He drew no blade. He whispered. His words found the broken: the remnants of fallen kingdoms Aetherion had ground beneath its heel, and the people the empire had bled to feed its glory. Word by word, ear by ear, the rebellion he carried bloomed in their hearts. Brother turned against brother. Captain turned upon king. By the time the King of Aetherion understood the silence around him, his executioners had already been crowned. They came for him in Solaria, in the marble heart of his own capital, and the throne ran red. The greatest empire of Middle Earth ended beneath a single blade, in a single hall. Hell had not lifted a sword. Hell had not needed to.",
       settingText: "Solaria, Helgrind <span class='ampersand'>&amp;</span> the Rest of the World",
       factions: [
@@ -2152,7 +2152,7 @@
     hh3: {
       number: "HH3",
       title: "The Second War of Hell and Heaven",
-      time: "Year 2024 ‚Äî 2029",
+      time: "Year 2024 — 2029",
       lore: "Years passed, and the wounds of Heaven slowly closed. Hell had not been idle. The Servant had spent the long silence ravaging Middle Earth, kingdom by kingdom, leaving ruin in every city he touched. The mortal world bled beneath the hand of Hell, and Heaven could not bear it any longer. When Heaven at last rose, it called once more upon its Chosen One, the same hand that had stood against the dark crown in the first war. The Second War of Hell and Heaven was fought across the same skies and pits as the first, but this time Heaven did not wait. The Chosen One led his host through the gates of Hell, hunting the one who had bled Middle Earth dry.",
       factions: [
         {
@@ -2287,7 +2287,7 @@
       number: "HH6",
       title: "Hell's Civil War",
       time: "Year 2032",
-      lore: "The crown that had never been broken from the outside was broken from within. Hell turned upon itself: the Servant raised his insurgency against the Demon King, and the whole of the dark kingdom split between those who kept the old order and those who would end it. Between the two armies moved the Wanderers, four survivors of Tartarus who wanted no throne at all ‚Äî only the road out. The war was decided in its first minute, in a room where a sleeping man could not answer to his own name, and it ended four days later in the Deadlands, where death is permanent and the King went walking alone.",
+      lore: "The crown that had never been broken from the outside was broken from within. Hell turned upon itself: the Servant raised his insurgency against the Demon King, and the whole of the dark kingdom split between those who kept the old order and those who would end it. Between the two armies moved the Wanderers, four survivors of Tartarus who wanted no throne at all — only the road out. The war was decided in its first minute, in a room where a sleeping man could not answer to his own name, and it ended four days later in the Deadlands, where death is permanent and the King went walking alone.",
       settingText: "Hell",
       settingLocations: [
         "Pandaemonium",
@@ -2348,14 +2348,14 @@
           tag: "Ssbakbar",
           faction: "Angels",
           role: "Swiftness Angel",
-          text: "SSBAkbar wanted out of Hell on the first day and let himself be talked out of it. What he built instead was the patient version of the same idea. He goaded a Titan into a fight he intended to lose, took the essence that fight left behind, tested the order of attack and movement before he staked anything on it, and then walked to Helgrind and waited ‚Äî timing his run to the one resolution in which the Warden was swept off the board. The only gate out of Hell went unguarded for exactly as long as he needed it to."
+          text: "SSBAkbar wanted out of Hell on the first day and let himself be talked out of it. What he built instead was the patient version of the same idea. He goaded a Titan into a fight he intended to lose, took the essence that fight left behind, tested the order of attack and movement before he staked anything on it, and then walked to Helgrind and waited — timing his run to the one resolution in which the Warden was swept off the board. The only gate out of Hell went unguarded for exactly as long as he needed it to."
         },
         {
           rank: 2, rankNumeral: "II",
           tag: "Deva",
           faction: "Rebels",
           role: "Spy",
-          text: "The Demon King sat on a throne where nothing could touch him, and DevaRollins talked him off it. He sold the King a Guardian that did not exist, and the King ‚Äî armored by a protection he had been promised rather than given ‚Äî decided he was safe enough to go and fix his one mistake. He walked into the Deadlands to do it. The Spy never raised a hand against him; he simply gave him a reason to stand up."
+          text: "The Demon King sat on a throne where nothing could touch him, and DevaRollins talked him off it. He sold the King a Guardian that did not exist, and the King — armored by a protection he had been promised rather than given — decided he was safe enough to go and fix his one mistake. He walked into the Deadlands to do it. The Spy never raised a hand against him; he simply gave him a reason to stand up."
         },
         {
           rank: 3, rankNumeral: "III",
@@ -2383,7 +2383,7 @@
     hhx: {
       number: "HHX",
       title: "Alternative Timeline",
-      time: "What If ‚Äî Year 2024 ‚Äî 2029",
+      time: "What If — Year 2024 — 2029",
       lore: "Years passed, and the wounds of Heaven slowly closed. Hell had not been idle. The Servant had spent the long silence ravaging Middle Earth, kingdom by kingdom, leaving ruin in every city he touched. The mortal world bled beneath the hand of Hell, and Heaven could not bear it any longer. When Heaven at last rose, it called once more upon its Chosen One, the same hand that had stood against the dark crown in the first war. The Second War of Hell and Heaven was fought across the same skies and pits as the first, but this time Heaven did not wait. The Chosen One led his host through the gates of Hell, hunting the one who had bled Middle Earth dry. And in this telling, the hunt did not falter. The Chosen One's blade reached the Demon King's throat and did not stop. The Gatekeeper fell before he could close the iron gates. The dark crown shattered upon the stones of its own throne room, and Heaven walked out of Hell carrying victory in its hands.",
       factions: [
         {
@@ -2442,7 +2442,7 @@
       number: "HH7",
       title: "Ragnarok",
       time: "The Last Days of Helios",
-      lore: "There was no war left to fight. Helios had come to its final days, and fifteen gods stood in the ruin of a world that was ending around them without asking their permission. Each dawn the world broke somewhere, and each dusk it took one of them with it. None of them knew what they were. Two among the fifteen were more than gods ‚Äî one was The Man, and one was The Serpent ‚Äî but the truth of it was sealed even from the two who carried it, and would not be spoken until every death the world was owed had been paid. When the last of them fell and the survivors were finally told their own names, all that remained was to choose whom to follow into whatever came after. Heaven lay at the end of one chain. Hell at the end of another. And for those who chose no one at all, there was only the fire.",
+      lore: "There was no war left to fight. Helios had come to its final days, and fifteen gods stood in the ruin of a world that was ending around them without asking their permission. Each dawn the world broke somewhere, and each dusk it took one of them with it. None of them knew what they were. Two among the fifteen were more than gods — one was The Man, and one was The Serpent — but the truth of it was sealed even from the two who carried it, and would not be spoken until every death the world was owed had been paid. When the last of them fell and the survivors were finally told their own names, all that remained was to choose whom to follow into whatever came after. Heaven lay at the end of one chain. Hell at the end of another. And for those who chose no one at all, there was only the fire.",
       settingText: "Dawn and Dusk, on the last days of Helios",
       factions: [
         {
@@ -2491,7 +2491,7 @@
           tag: "Igris",
           faction: "Those who can hear",
           role: "The Serpent",
-          text: "Igris wanted to be The Man, drew the opposite, and decided he would simply play The Man better than the man who actually was one. Against an opponent telling the plain truth at the top of his voice, he never claimed an identity at all. He pointed out instead that no one in the room could possibly know their own name before Judgment Day ‚Äî which made every claim a bluff by definition, including the true one ‚Äî and then asked to be judged on nothing but what the whole game had already watched him do. Four gods followed the chain to Hell. He walked out of Ragnarok alone."
+          text: "Igris wanted to be The Man, drew the opposite, and decided he would simply play The Man better than the man who actually was one. Against an opponent telling the plain truth at the top of his voice, he never claimed an identity at all. He pointed out instead that no one in the room could possibly know their own name before Judgment Day — which made every claim a bluff by definition, including the true one — and then asked to be judged on nothing but what the whole game had already watched him do. Four gods followed the chain to Hell. He walked out of Ragnarok alone."
         },
         {
           rank: 2, rankNumeral: "II",
@@ -2505,14 +2505,14 @@
           tag: "Silver Mist",
           faction: "Those who can hear",
           role: "God",
-          text: "BloodRaven took the Visionary on the third day and handled it without ever being caught holding it, which is more than most of the fifteen managed. He followed s0urav5 at the Final Follow and went to Hell for it ‚Äî the third chapter in a row he has finished on the losing side, and the fourth of a career that has never once ended in a win."
+          text: "BloodRaven took the Visionary on the third day and handled it without ever being caught holding it, which is more than most of the fifteen managed. He followed s0urav5 at the Final Follow and went to Hell for it — the third chapter in a row he has finished on the losing side, and the fourth of a career that has never once ended in a win."
         },
         {
           rank: 4, rankNumeral: "IV",
           tag: "Sourav5",
           faction: "Those who can sense",
           role: "God",
-          text: "By the Final Follow, four lives had collapsed onto one man's decision ‚Äî Parther had followed BloodRaven, BloodRaven had followed s0urav5, TheKindOne had followed s0urav5, and s0urav5 held his own besides. He answered the most consequential question in the edition by spinning a wheel, and the wheel sent all four of them to Hell."
+          text: "By the Final Follow, four lives had collapsed onto one man's decision — Parther had followed BloodRaven, BloodRaven had followed s0urav5, TheKindOne had followed s0urav5, and s0urav5 held his own besides. He answered the most consequential question in the edition by spinning a wheel, and the wheel sent all four of them to Hell."
         }
       ]
     }
@@ -2669,7 +2669,7 @@
   const aliasOf = t => ALIAS[t] || t;
   const HH_ORDER = ['hh1','hh2','hh3','hh4','hh5','hhx','hh6','hh7'];
 
-  // HH1 was run twice. The second run ‚Äî the Red/White rerun ‚Äî has no surviving roster,
+  // HH1 was run twice. The second run — the Red/White rerun — has no surviving roster,
   // so its results are recorded here instead. They count toward a player's record only:
   // no faction, no role, no pairing, and no effect on streaks.
   const EXTRA_RESULTS = [
@@ -2695,7 +2695,7 @@
       if (rec.factions && rec.factions.length) {
         rec.factions.forEach(f => {
           f.members.forEach(m => {
-            // A member may win or lose independently of their faction ‚Äî an Angel who
+            // A member may win or lose independently of their faction — an Angel who
             // escapes Hell in HH6, the lone Serpent left standing in HH7.
             const won = m.won !== undefined ? m.won : !!f.winner;
             const outcome = won ? 'won' : 'lost';
@@ -2805,7 +2805,7 @@
   }
 
   function fmtPct(rate) {
-    return rate === null ? '‚Äî' : (rate * 100).toFixed(1) + '%';
+    return rate === null ? '—' : (rate * 100).toFixed(1) + '%';
   }
 
   function renderHOF() {
@@ -2844,7 +2844,7 @@
       HH_ORDER.forEach(k => {
         const rec = HH_DATA[k]; if (!rec || !rec.factions) return;
         rec.factions.forEach(f => f.members.forEach(m => {
-          // secondRole covers inherited titles ‚Äî HH2's Servant passed to Drahsin on Deva's death.
+          // secondRole covers inherited titles — HH2's Servant passed to Drahsin on Deva's death.
           if (roleMatch(m.role) || (m.secondRole && roleMatch(m.secondRole))) {
             out.push({ hh: k.toUpperCase(), tag: aliasOf(m.tag) });
           }
@@ -2891,7 +2891,7 @@
       r.factions.forEach(f => allFac.push({ hh: k.toUpperCase(), name: f.name, size: f.members.length, won: !!f.winner }));
     });
     const largest = [...allFac].sort((a,b) => b.size - a.size).slice(0, 3);
-    // Lopsidedness is the winners' share of the whole chapter, not raw headcount ‚Äî and
+    // Lopsidedness is the winners' share of the whole chapter, not raw headcount — and
     // winners are counted per player, since a faction can lose while a member still wins.
     const winGroups = [];
     HH_ORDER.forEach(k => {
@@ -2905,7 +2905,7 @@
     const lopsided = winGroups.sort((a,b) => (a.size / a.total) - (b.size / b.total)).slice(0, 3);
 
     // ---- Render ----
-    const list = (rows, render) => rows.length ? rows.map(render).join('') : '<div class="hof-empty">‚Äî</div>';
+    const list = (rows, render) => rows.length ? rows.map(render).join('') : '<div class="hof-empty">—</div>';
 
     const html = `
       <div class="hof-entrance">
@@ -2923,21 +2923,21 @@
             <ol class="hof-rank">${list(mostHH, p => `<li><b>${p.tag}</b><span class="hof-val">${p.apps}</span></li>`)}</ol>
           </article>
           <article class="hof-card">
-            <h3>Iron Man ‚Äî Consecutive Chapters</h3>
+            <h3>Iron Man — Consecutive Chapters</h3>
             <ol class="hof-rank">${list(ironMan, p => `<li><b>${p.tag}</b><span class="hof-val">${p.n}</span></li>`)}</ol>
           </article>
           <article class="hof-card wide">
-            <h3>The Originals ‚Äî HH1 Roster</h3>
-            <p class="hof-namestrip">${og.join(' ¬∑ ')}</p>
+            <h3>The Originals — HH1 Roster</h3>
+            <p class="hof-namestrip">${og.join(' · ')}</p>
           </article>
           <article class="hof-card">
             <h3>Still-Burning Veterans</h3>
             <p class="hof-desc">Played the first war <em>and</em> still fight in HH6+</p>
-            <p class="hof-namestrip">${stillActive.join(' ¬∑ ') || '‚Äî'}</p>
+            <p class="hof-namestrip">${stillActive.join(' · ') || '—'}</p>
           </article>
           <article class="hof-card">
             <h3>One Appearance Only</h3>
-            <p class="hof-namestrip muted">${oneShot.join(' ¬∑ ')}</p>
+            <p class="hof-namestrip muted">${oneShot.join(' · ')}</p>
           </article>
         </div>
       </section>
@@ -2977,7 +2977,7 @@
             <ol class="hof-rank">${list(mvpList, p => `<li><b>${p.tag}</b><span class="hof-val">${p.mvpTotal} <i>(I:${p.mvp1} II:${p.mvp2} III:${p.mvp3})</i></span></li>`)}</ol>
           </article>
           <article class="hof-card">
-            <h3>Gilded Crown ‚Äî Most #1 MVPs</h3>
+            <h3>Gilded Crown — Most #1 MVPs</h3>
             <ol class="hof-rank">${list(mvp1, p => `<li><b>${p.tag}</b><span class="hof-val">${p.mvp1}</span></li>`)}</ol>
           </article>
           <article class="hof-card">
@@ -2990,7 +2990,7 @@
             <ul class="hof-rank">${list(heroic, p => `<li><b>${p.tag}</b><span class="hof-val">${p.mvpInLoss.join(', ')}</span></li>`)}</ul>
           </article>
         </div>
-        <p class="hof-quote">Vanetails has never put on the armor without leaving with a crown ‚Äî every chapter she has fought, she has been named among the best.</p>
+        <p class="hof-quote">Vanetails has never put on the armor without leaving with a crown — every chapter she has fought, she has been named among the best.</p>
       </section>
 
       <section class="hof-section">
@@ -3022,19 +3022,19 @@
             <ol class="hof-rank">${list(spies, ([tag,n]) => `<li><b>${tag}</b><span class="hof-val">${n}</span></li>`)}</ol>
           </article>
         </div>
-        <p class="hof-quote">Thekindone has been named among the best in four chapters and walked away victorious in two ‚Äî no one in the chronicle has been praised so often for so little reward.</p>
+        <p class="hof-quote">Thekindone has been named among the best in four chapters and walked away victorious in two — no one in the chronicle has been praised so often for so little reward.</p>
       </section>
 
       <section class="hof-section">
         <h2 class="hof-section-title">Allegiance</h2>
         <div class="hof-grid">
           <article class="hof-card">
-            <h3>True Devil ‚Äî Never Walked the Other Side</h3>
-            <p class="hof-namestrip">${trueDevil.length ? trueDevil.join(' ¬∑ ') : '‚Äî'}</p>
+            <h3>True Devil — Never Walked the Other Side</h3>
+            <p class="hof-namestrip">${trueDevil.length ? trueDevil.join(' · ') : '—'}</p>
           </article>
           <article class="hof-card">
-            <h3>True Angel ‚Äî Never Walked the Other Side</h3>
-            <p class="hof-namestrip">${trueAngel.length ? trueAngel.join(' ¬∑ ') : '‚Äî'}</p>
+            <h3>True Angel — Never Walked the Other Side</h3>
+            <p class="hof-namestrip">${trueAngel.length ? trueAngel.join(' · ') : '—'}</p>
           </article>
           <article class="hof-card">
             <h3>Most Devils-side Chapters</h3>
@@ -3051,16 +3051,16 @@
         <h2 class="hof-section-title">Pair Dynamics</h2>
         <div class="hof-grid">
           <article class="hof-card wide">
-            <h3>Inseparable ‚Äî Most Often on the Same Team</h3>
-            <ol class="hof-rank">${list(inseparable, ([pair, n]) => `<li><b>${pair}</b><span class="hof-val">${n}√ó</span></li>`)}</ol>
+            <h3>Inseparable — Most Often on the Same Team</h3>
+            <ol class="hof-rank">${list(inseparable, ([pair, n]) => `<li><b>${pair}</b><span class="hof-val">${n}×</span></li>`)}</ol>
           </article>
           <article class="hof-card">
-            <h3>Strongest Duo ‚Äî Most Wins Together</h3>
+            <h3>Strongest Duo — Most Wins Together</h3>
             <ol class="hof-rank">${list(strongest, ([pair, w]) => `<li><b>${pair}</b><span class="hof-val">${w} wins</span></li>`)}</ol>
           </article>
           <article class="hof-card wide">
-            <h3>Greatest Rivalries ‚Äî Most Often Opposed</h3>
-            <ol class="hof-rank">${list(rivalry, ([pair, n]) => `<li><b>${pair}</b><span class="hof-val">${n}√ó</span></li>`)}</ol>
+            <h3>Greatest Rivalries — Most Often Opposed</h3>
+            <ol class="hof-rank">${list(rivalry, ([pair, n]) => `<li><b>${pair}</b><span class="hof-val">${n}×</span></li>`)}</ol>
           </article>
         </div>
       </section>
@@ -3081,7 +3081,7 @@
         <p class="hof-quote">The narrowest victories belong to no army at all. One Angel walked out of Hell alone; one god walked out of Ragnarok alone. Neither needed anybody else to win, and neither took anybody with them.</p>
       </section>
 
-      <div class="hof-foot">‚õß Carved beneath the Eternal Sky ‚õß</div>
+      <div class="hof-foot">⛧ Carved beneath the Eternal Sky ⛧</div>
     `;
     document.getElementById('hofContent').innerHTML = html;
     startHofTunnel();
