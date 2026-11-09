@@ -906,6 +906,38 @@
   }
   .hof-card.wide { grid-column: span 2; }
   @media (max-width: 720px) { .hof-card.wide { grid-column: span 1; } }
+
+  /* The full record. A long table should sit still while it is being read, so this
+     card opts out of the lift the others get on hover. */
+  .hof-card.plain:hover { transform: none; }
+  .hof-table-wrap { overflow-x: auto; margin-top: 4px; }
+  .hof-table { width: 100%; border-collapse: collapse; font-family: 'Cinzel', Georgia, serif; }
+  .hof-table th,
+  .hof-table td { padding: 8px 10px; text-align: right; white-space: nowrap; }
+  .hof-table th:nth-child(2),
+  .hof-table td:nth-child(2) { text-align: left; width: 99%; }
+  .hof-table thead th {
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: rgba(216,170,90,.8);
+    border-bottom: 1px solid rgba(216,170,90,.3);
+    cursor: pointer;
+    user-select: none;
+  }
+  .hof-table thead th:first-child { cursor: default; }
+  .hof-table thead th:hover { color: rgba(255,210,140,1); }
+  .hof-table .sort-mark { font-size: 8px; padding-left: 6px; opacity: .75; }
+  .hof-table tbody tr { border-bottom: 1px dashed rgba(216,170,90,.12); }
+  .hof-table tbody tr:hover { background: rgba(216,170,90,.06); }
+  .hof-table td {
+    font-size: 13px;
+    color: rgba(243,231,208,.92);
+    text-shadow: 0 1px 3px rgba(0,0,0,.8);
+  }
+  .hof-table td.rank { color: rgba(216,170,90,.5); font-size: 11px; text-align: right; }
+  .hof-table td.name { font-size: 14px; letter-spacing: .02em; }
+  .hof-table td.rate { color: rgba(255,200,110,.95); }
   .hof-card:hover {
     transform: translateY(-3px) rotateX(2deg);
     border-color: rgba(255,200,120,.55);
@@ -3374,6 +3406,11 @@
         .sort((a, b) => b.w - a.w);
     })();
 
+    // Every name the chronicle holds, newest-heaviest career first. Sorted again in the
+    // browser whenever a column heading is clicked.
+    const fullRecord = arr.slice()
+      .sort((a, b) => b.apps - a.apps || b.wins - a.wins || a.tag.localeCompare(b.tag));
+
     // ---- Render ----
     const list = (rows, render) => rows.length ? rows.map(render).join('') : '<div class="hof-empty">—</div>';
 
@@ -3619,9 +3656,69 @@
         <p class="hof-quote">One Angel walked out of Hell alone, and not even his own side came with him. Ragnarok ended narrower still, but Helios had no armies — and a lone god cannot be measured against a faction that never existed.</p>
       </section>
 
+      <section class="hof-section">
+        <h2 class="hof-section-title">The Full Record</h2>
+        <div class="hof-grid">
+          <article class="hof-card wide plain">
+            <p class="hof-desc">Every name the chronicle holds. Click a heading to sort by it.</p>
+            <div class="hof-table-wrap">
+              <table class="hof-table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th data-key="name">Player<span class="sort-mark"></span></th>
+                    <th data-key="played">Played<span class="sort-mark">▼</span></th>
+                    <th data-key="won">Won<span class="sort-mark"></span></th>
+                    <th data-key="lost">Lost<span class="sort-mark"></span></th>
+                    <th data-key="rate">Win rate<span class="sort-mark"></span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${fullRecord.map((p, i) => `
+                  <tr data-name="${p.tag}" data-played="${p.apps}" data-won="${p.wins}" data-lost="${p.losses}" data-rate="${p.winRate === null ? -1 : p.winRate}">
+                    <td class="rank">${i + 1}</td>
+                    <td class="name">${p.tag}</td>
+                    <td>${p.apps}</td>
+                    <td>${p.wins}</td>
+                    <td>${p.losses}</td>
+                    <td class="rate">${fmtPct(p.winRate)}</td>
+                  </tr>`).join('')}
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <div class="hof-foot">⛧ Carved beneath the Eternal Sky ⛧</div>
     `;
     document.getElementById('hofContent').innerHTML = html;
+
+    // Column sorting for the full record. Ties fall back to the career-weight order the
+    // table is built in, so a click never scrambles names that are level on the key.
+    const tbl = document.querySelector('.hof-table');
+    if (tbl) {
+      const tbody = tbl.querySelector('tbody');
+      const heads = [...tbl.querySelectorAll('thead th[data-key]')];
+      let key = 'played', dir = -1;
+      heads.forEach(th => th.addEventListener('click', () => {
+        const k = th.getAttribute('data-key');
+        if (k === key) dir = -dir; else { key = k; dir = k === 'name' ? 1 : -1; }
+        [...tbody.querySelectorAll('tr')]
+          .sort((a, b) => {
+            const va = a.dataset[key], vb = b.dataset[key];
+            const cmp = key === 'name' ? va.localeCompare(vb) : Number(va) - Number(vb);
+            return cmp * dir
+              || Number(b.dataset.played) - Number(a.dataset.played)
+              || Number(b.dataset.won) - Number(a.dataset.won)
+              || a.dataset.name.localeCompare(b.dataset.name);
+          })
+          .forEach((row, i) => { row.querySelector('.rank').textContent = i + 1; tbody.appendChild(row); });
+        heads.forEach(h => h.querySelector('.sort-mark').textContent =
+          h === th ? (dir < 0 ? '▼' : '▲') : '');
+      }));
+    }
+
     startHofTunnel();
   }
 
