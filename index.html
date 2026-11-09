@@ -3310,6 +3310,55 @@
       .sort((a, b) => b.n - a.n)
       .slice(0, 5);
 
+    // The run a player is carrying right now, which is not the same as his worst ever.
+    const stillWaiting = arr.map(p => {
+      let n = 0;
+      for (let i = p.history.length - 1; i >= 0; i--) { if (p.history[i].outcome === 'lost') n++; else break; }
+      return n >= 2 ? { tag: p.tag, n } : null;
+    }).filter(Boolean).sort((a, b) => b.n - a.n).slice(0, 6);
+
+    // Span is first chapter to last with the silences counted in, which is a different
+    // thing from how many a player actually turned up for.
+    const SPAN = {}; HH_ORDER.forEach((k, i) => SPAN[k.toUpperCase()] = i);
+    const careerSpan = arr.map(p => {
+      const ix = p.roles.map(r => SPAN[r.hh]).filter(v => v !== undefined).sort((a, b) => a - b);
+      return ix.length ? { tag: p.tag, n: ix[ix.length - 1] - ix[0] + 1,
+                           from: HH_ORDER[ix[0]].toUpperCase(),
+                           to: HH_ORDER[ix[ix.length - 1]].toUpperCase() } : null;
+    }).filter(Boolean).sort((a, b) => b.n - a.n).slice(0, 5);
+
+    const beside = (() => {
+      const m = {};
+      HH_ORDER.forEach(k => { const r = HH_DATA[k]; if (!r || !r.factions) return;
+        r.factions.forEach(f => { const t = f.members.map(x => aliasOf(x.tag));
+          t.forEach(a => t.forEach(b => { if (a !== b) (m[a] || (m[a] = new Set())).add(b); })); }); });
+      return Object.entries(m).map(([tag, set]) => ({ tag, n: set.size }))
+        .sort((a, b) => b.n - a.n).slice(0, 6);
+    })();
+
+    const debutMVP = arr.map(p => {
+      if (!p.history.length) return null;
+      const first = p.history[0].hh;
+      const m = p.mvpPlaces.find(x => x.hh === first);
+      return m ? { tag: p.tag, hh: first, rank: m.rank } : null;
+    }).filter(Boolean).sort((a, b) => a.rank - b.rank || ORD[a.hh] - ORD[b.hh]);
+
+    const neverBest = arr.filter(p => p.mvpTotal === 0).sort((a, b) => b.apps - a.apps).slice(0, 6);
+
+    // Rebels, Loyalists and the Fallen Gods are Devils under another banner, so they stand
+    // as one side here. Helios is split by perception rather than allegiance and is left out.
+    const sides = (() => {
+      const g = {};
+      HH_ORDER.forEach(k => { const r = HH_DATA[k]; if (!r || !r.factions) return;
+        r.factions.filter(isFaction).forEach(f => {
+          const name = DEVIL_ALIGNED.has(f.name) ? 'Devils'
+                     : ANGEL_ALIGNED.has(f.name) ? 'Angels' : f.name;
+          const e = g[name] || (g[name] = { name, n: 0, w: 0 });
+          e.n++; if (f.winner) e.w++;
+        }); });
+      return Object.values(g).sort((a, b) => b.w - a.w || (b.w / b.n) - (a.w / a.n));
+    })();
+
     // ---- Render ----
     const list = (rows, render) => rows.length ? rows.map(render).join('') : '<div class="hof-empty">—</div>';
 
@@ -3349,6 +3398,11 @@
             <h3>One Appearance Only</h3>
             <p class="hof-namestrip muted">${oneShot.join(' · ')}</p>
           </article>
+          <article class="hof-card">
+            <h3>Longest Career Span</h3>
+            <p class="hof-desc">First chapter to last, the silences counted in</p>
+            <ol class="hof-rank">${list(careerSpan, x => `<li><b>${x.tag}</b> <span class="hof-hh">${x.from} → ${x.to}</span><span class="hof-val">${x.n}</span></li>`)}</ol>
+          </article>
         </div>
       </section>
 
@@ -3376,6 +3430,11 @@
             <h3>Longest Losing Streak</h3>
             <ol class="hof-rank">${list(longestLoss, p => `<li><b>${p.tag}</b><span class="hof-val">${p.n} in a row</span></li>`)}</ol>
           </article>
+          <article class="hof-card">
+            <h3>Still Waiting</h3>
+            <p class="hof-desc">The run a player is carrying right now</p>
+            <ol class="hof-rank">${list(stillWaiting, p => `<li><b>${p.tag}</b><span class="hof-val">${p.n} and counting</span></li>`)}</ol>
+          </article>
         </div>
       </section>
 
@@ -3398,6 +3457,16 @@
             <h3>Heroic Losses</h3>
             <p class="hof-desc">MVPs whose faction still fell</p>
             <ul class="hof-rank">${list(heroic, p => `<li><b>${p.tag}</b><span class="hof-val">${p.mvpInLoss.join(', ')}</span></li>`)}</ul>
+          </article>
+          <article class="hof-card">
+            <h3>Best on Debut</h3>
+            <p class="hof-desc">Named among the best in their first chapter</p>
+            <ol class="hof-rank">${list(debutMVP, d => `<li><b>${d.tag}</b> <span class="hof-hh">${d.hh}</span><span class="hof-val">#${d.rank}</span></li>`)}</ol>
+          </article>
+          <article class="hof-card">
+            <h3>Never Named</h3>
+            <p class="hof-desc">Most chapters played without once making a list</p>
+            <ol class="hof-rank">${list(neverBest, p => `<li><b>${p.tag}</b><span class="hof-val">${p.apps}</span></li>`)}</ol>
           </article>
           <article class="hof-card wide">
             <h3>Best Comeback</h3>
@@ -3460,6 +3529,11 @@
             <h3>Most Angels-side Chapters</h3>
             <ol class="hof-rank">${list(angelSide, p => `<li><b>${p.tag}</b><span class="hof-val">${p.n}</span></li>`)}</ol>
           </article>
+          <article class="hof-card">
+            <h3>Which Side Wins</h3>
+            <p class="hof-desc">Rebels, Loyalists and the Fallen Gods all count as Devils</p>
+            <ol class="hof-rank">${list(sides, x => `<li><b>${x.name}</b><span class="hof-val">${x.w} of ${x.n}</span></li>`)}</ol>
+          </article>
         </div>
       </section>
 
@@ -3477,6 +3551,11 @@
           <article class="hof-card wide">
             <h3>Greatest Rivalries — Most Often Opposed</h3>
             <ol class="hof-rank">${list(rivalry, ([pair, n]) => `<li><b>${pair}</b><span class="hof-val">${n}×</span></li>`)}</ol>
+          </article>
+          <article class="hof-card">
+            <h3>Most Names Fought Beside</h3>
+            <p class="hof-desc">Different people who have shared a faction with them</p>
+            <ol class="hof-rank">${list(beside, p => `<li><b>${p.tag}</b><span class="hof-val">${p.n}</span></li>`)}</ol>
           </article>
           ${nemesis.length ? `
           <article class="hof-card wide">
