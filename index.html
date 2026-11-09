@@ -2744,6 +2744,7 @@
           name: "The Serpent",
           key: "neutral",
           sigil: null,
+          noAlignment: true,
           members: [
             { tag: "Cupid", role: "The Serpent", archetype: "The Serpent", headline: true },
           ]
@@ -3004,6 +3005,11 @@
     { hh: 'HH5', tag: 'King of Treasure', deaths: 2 },
   ];
 
+  // HH4's roster was never posted, so the chapter carries no faction to read a side
+  // from. Its own lore closes with Hell standing over a broken Middle Earth, so the
+  // chapter is attributed here by hand. Everything else derives from the rosters.
+  const SIDE_WON_MANUAL = { HH4: 'Devils' };
+
   function buildHOFStats() {
     const players = {};
     const pGet = t => players[t] || (players[t] = {
@@ -3236,8 +3242,8 @@
     })();
 
     // ---- Faction ----
-    const DEVIL_ALIGNED = new Set(['Devils','Rebels','Loyalists','Fallen Gods']);
-    const ANGEL_ALIGNED = new Set(['Angels','Royalists']);
+    const DEVIL_ALIGNED = new Set(['Devils','Rebels','Fallen Gods']);
+    const ANGEL_ALIGNED = new Set(['Angels','Royalists','Loyalists','Human & Valkyrie']);
     const trueDevil = arr.filter(p => {
       const factions = new Set(p.factionsPlayed.filter(f => f !== 'TBD'));
       return factions.size > 0 && [...factions].every(f => DEVIL_ALIGNED.has(f)) && p.factionsPlayed.length >= 2;
@@ -3345,18 +3351,27 @@
 
     const neverBest = arr.filter(p => p.mvpTotal === 0).sort((a, b) => b.apps - a.apps).slice(0, 6);
 
-    // Rebels, Loyalists and the Fallen Gods are Devils under another banner, so they stand
-    // as one side here. Helios is split by perception rather than allegiance and is left out.
-    const sides = (() => {
-      const g = {};
-      HH_ORDER.forEach(k => { const r = HH_DATA[k]; if (!r || !r.factions) return;
-        r.factions.filter(isFaction).forEach(f => {
-          const name = DEVIL_ALIGNED.has(f.name) ? 'Devils'
-                     : ANGEL_ALIGNED.has(f.name) ? 'Angels' : f.name;
-          const e = g[name] || (g[name] = { name, n: 0, w: 0 });
-          e.n++; if (f.winner) e.w++;
-        }); });
-      return Object.values(g).sort((a, b) => b.w - a.w || (b.w / b.n) - (a.w / a.n));
+    // Counted in chapters rather than factions, because a chapter can field two armies of
+    // the same side — HH6 ran Loyalists against Rebels — and only one of them can win.
+    // Helios is left out: it was decided by a Serpent, and the Serpent answers to neither.
+    const sideWins = (() => {
+      const decided = [];
+      HH_ORDER.forEach(k => {
+        const label = k.toUpperCase();
+        if (SIDE_WON_MANUAL[label]) { decided.push({ hh: label, side: SIDE_WON_MANUAL[label] }); return; }
+        const r = HH_DATA[k]; if (!r || !r.factions) return;
+        const win = r.factions.find(f => f.winner && isFaction(f));
+        if (!win) return;
+        const side = DEVIL_ALIGNED.has(win.name) ? 'Devils'
+                   : ANGEL_ALIGNED.has(win.name) ? 'Angels' : null;
+        if (side) decided.push({ hh: label, side });
+      });
+      const tally = {};
+      decided.forEach(d => (tally[d.side] = (tally[d.side] || 0) + 1));
+      return Object.entries(tally)
+        .map(([name, w]) => ({ name, w, n: decided.length,
+                               chapters: decided.filter(d => d.side === name).map(d => d.hh) }))
+        .sort((a, b) => b.w - a.w);
     })();
 
     // ---- Render ----
@@ -3531,8 +3546,9 @@
           </article>
           <article class="hof-card">
             <h3>Which Side Wins</h3>
-            <p class="hof-desc">Rebels, Loyalists and the Fallen Gods all count as Devils</p>
-            <ol class="hof-rank">${list(sides, x => `<li><b>${x.name}</b><span class="hof-val">${x.w} of ${x.n}</span></li>`)}</ol>
+            <p class="hof-desc">Chapters decided between the two sides. Rebels and the Fallen Gods count as Devils; Loyalists, Royalists and the Valkyries as Angels</p>
+            <ol class="hof-rank">${list(sideWins, x => `<li><b>${x.name}</b><span class="hof-val">${x.w} of ${x.n}</span></li>`)}</ol>
+            <p class="hof-under">${sideWins.map(x => `${x.name} — ${x.chapters.join(', ')}`).join('. ')}.</p>
           </article>
         </div>
       </section>
