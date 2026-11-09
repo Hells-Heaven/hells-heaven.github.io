@@ -1598,6 +1598,32 @@
     white-space: nowrap;
   }
 
+  /* The inverse of the victor badge: a player who won nothing although his faction did. */
+  .player-card.fell {
+    --fallen: rgba(176,166,156,.72);
+    position: relative;
+    padding-right: 72px;
+  }
+  .player-fate {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  .player-fate .player-fate-label {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 9px;
+    letter-spacing: .4em;
+    text-transform: uppercase;
+    color: var(--fallen);
+    white-space: nowrap;
+  }
+  .cast-faction.winner .player-card.fell {
+    box-shadow: 0 2px 6px rgba(0,0,0,.5), inset 0 -1px 0 rgba(0,0,0,.3);
+    opacity: .72;
+  }
+
   /* Victor player cards — slightly more 3D. Border/text colors stay with the faction palette;
      winner state adds depth shadows + a soft top highlight that feels lifted from the page. */
   .cast-faction.winner .player-card {
@@ -2687,7 +2713,7 @@
           key: "angel",
           winner: true,
           members: [
-            { tag: "Martyr",           role: "Adam", headline: true },
+            { tag: "Martyr",           role: "Adam", headline: true, won: false },
             { tag: "Ali",              role: "Eve" },
             { tag: "TSL",              role: "Brünnhilde" },
             { tag: "Tragicboy",        role: "Mist" },
@@ -2830,13 +2856,15 @@
             // Only a victor whose own faction lost needs marking here; the rest already
             // stand under the faction crown.
             const soloVictor = won && !f.winner;
+            // ...and the inverse: a player who took no victory although his faction did.
+            const fellInWin = !won && !!f.winner;
             const archClass = m.archetype
               ? ' arch-' + m.archetype.replace(/^The\s+/i, '').toLowerCase()
               : '';
             const roleHtml = m.role && m.role !== m.archetype
               ? `<span class="role">${m.role}</span>` : '';
             return `
-            <div class="player-card${m.headline ? ' headline' : ''}${soloVictor ? ' won' : ''}">
+            <div class="player-card${m.headline ? ' headline' : ''}${soloVictor ? ' won' : ''}${fellInWin ? ' fell' : ''}">
               ${roleHtml}
               <div class="player-name-row">
                 <span class="tag">${m.tag}</span>
@@ -2847,6 +2875,8 @@
                 <div class="player-crown">${CROWN_SVG}</div>
                 <span class="player-victor-label">Victor</span>
               </div>` : ''}
+              ${fellInWin ? `
+              <div class="player-fate"><span class="player-fate-label">Lost</span></div>` : ''}
             </div>`;
           }).join('')}
         </div>
@@ -3197,7 +3227,7 @@
     })();
 
     // ---- Faction ----
-    const DEVIL_ALIGNED = new Set(['Devils','Rebels','Loyalists']);
+    const DEVIL_ALIGNED = new Set(['Devils','Rebels','Loyalists','Fallen Gods']);
     const ANGEL_ALIGNED = new Set(['Angels','Royalists']);
     const trueDevil = arr.filter(p => {
       const factions = new Set(p.factionsPlayed.filter(f => f !== 'TBD'));
