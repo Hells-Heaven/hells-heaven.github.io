@@ -2995,6 +2995,15 @@
     { hh: 'HH6', tag: 'Tragicboy', day: 0.5, how: 'The Warden, destroyed at midday by his own Dullahan — before he had posted a single word.' },
   ];
 
+  // Dying once ends a chapter for almost everyone. Dying twice means somebody spent a
+  // revival on you, and dying three times means they did it again — so this is as much a
+  // record of what a side was willing to pay as of how badly a player was hunted.
+  const MULTI_DEATHS = [
+    { hh: 'HH8', tag: 'Igris', deaths: 3, how: 'Killed on Day 1, executed on Day 4, killed again on Day 7. Sourav and Ssbakbar were both sacrificed to bring him back, and he finished the chapter without a single kill of his own.' },
+    { hh: 'HH7', tag: 'Deva', deaths: 2, how: 'Lost his life on Day 4, won the vacated revival slot on rock-paper-scissors, and was gone again two days later.' },
+    { hh: 'HH5', tag: 'King of Treasure', deaths: 2 },
+  ];
+
   function buildHOFStats() {
     const players = {};
     const pGet = t => players[t] || (players[t] = {
@@ -3287,6 +3296,20 @@
       .sort((a, b) => a.day - b.day)
       .slice(0, 3);
 
+    const multiDeaths = MULTI_DEATHS
+      .map(e => ({ ...e, tag: aliasOf(e.tag) }))
+      .sort((a, b) => b.deaths - a.deaths || ORD[a.hh] - ORD[b.hh])
+      .slice(0, 5);
+
+    // Counted in chapters finished, not years waited. history runs in chronicle order, so
+    // the index of the first win is the number of chapters that ended without one.
+    const longWait = arr
+      .map(p => { const i = p.history.findIndex(h => h.outcome === 'won');
+                  return i > 0 ? { tag: p.tag, n: i, hh: p.history[i].hh } : null; })
+      .filter(Boolean)
+      .sort((a, b) => b.n - a.n)
+      .slice(0, 5);
+
     // ---- Render ----
     const list = (rows, render) => rows.length ? rows.map(render).join('') : '<div class="hof-empty">—</div>';
 
@@ -3485,6 +3508,18 @@
             <ol class="hof-rank">${list(swiftest, e => `<li><b>${e.tag}</b> <span class="hof-hh">${e.hh}</span><span class="hof-val">Day ${e.day}</span></li>`)}</ol>
             <p class="hof-under">${swiftest[0].how}</p>
           </article>` : ''}
+          ${multiDeaths.length ? `
+          <article class="hof-card">
+            <h3>Most Deaths in One Chapter</h3>
+            <p class="hof-desc">Died, was brought back, and died again</p>
+            <ol class="hof-rank">${list(multiDeaths, e => `<li><b>${e.tag}</b> <span class="hof-hh">${e.hh}</span><span class="hof-val">${e.deaths}</span></li>`)}</ol>
+            ${multiDeaths[0].how ? `<p class="hof-under">${multiDeaths[0].how}</p>` : ''}
+          </article>` : ''}
+          <article class="hof-card">
+            <h3>The Long Wait</h3>
+            <p class="hof-desc">Chapters finished without a win before the first one came</p>
+            <ol class="hof-rank">${list(longWait, w => `<li><b>${w.tag}</b> <span class="hof-hh">${w.hh}</span><span class="hof-val">${w.n}</span></li>`)}</ol>
+          </article>
         </div>
         <p class="hof-quote">One Angel walked out of Hell alone, and not even his own side came with him. Ragnarok ended narrower still, but Helios had no armies — and a lone god cannot be measured against a faction that never existed.</p>
       </section>
