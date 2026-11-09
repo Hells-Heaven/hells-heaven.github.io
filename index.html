@@ -627,7 +627,7 @@
   .mute-btn svg { width: 22px; height: 22px; }
 
   /* ========================================================
-     HH DASHBOARD (view-hh1 .. view-hh7)
+     HH DASHBOARD (view-hh1 .. view-hh8)
      ======================================================== */
 
   /* Show dashboard only on hh-* views */
@@ -2026,10 +2026,10 @@
 (() => {
   // ---------- Timeline data ----------
   // Each entry: [name, time, unlocked?]
-  // HH1 — HH7 are unlocked; everything else is sealed until released.
+  // HH1 — HH8 are unlocked; everything else is sealed until released.
   const EVENTS = [
     ["HH7 — Ragnarok",                                  "The Last Days of Helios",  true ],
-    ["HH8 — The Ancient War of Remnants",               "Undocumented",            false],
+    ["HH8 — The Ancient War of Remnants",               "Before Year 0",           true ],
     ["HH9 — The Age of Lostborns",                      "Year 0 — Year 1000",      false],
     ["HH10 — The Cold War",                             "Year 1007 — Year 1030",   false],
     ["HH11 — The Rise of Pandaemonium",                 "Year 1030 — 1999",        false],
@@ -2669,6 +2669,97 @@
           text: "By the Final Follow, four lives had collapsed onto one man's decision — Parther had followed BloodRaven, BloodRaven had followed s0urav5, TheKindOne had followed s0urav5, and s0urav5 held his own besides. He answered the most consequential question in the edition by spinning a wheel, and the wheel sent all four of them to Hell."
         }
       ]
+    },
+    hh8: {
+      number: "HH8",
+      title: "The Ancient War of Remnants",
+      time: "Before Year 0",
+      lore: "He asked the gods to follow him. On the last day of Helios, when the sky came apart and seven were left standing, the Man stood among gods and asked to be followed. No one did. So he went alone. He raised Heaven from the corpse of Helios, and he filled it with law, and with song, and with winged children who would one day forget they were born from a broken whole. Ages passed. He brought life to this place he called Heaven, and he kept the corrupted souls of Hell at bay. But he was not immortal. Knowing his age would end, he made Middle Earth — a lesser cradle beneath Heaven, a small realm under an enormous sky — and he filled it with something that had never existed before. Not gods. Not children of the broken world. Mankind. Short-lived, frightened, ordinary, but in that holding something special. Nothing about them was owed. Nothing about them was inherited. They were the only thing in all of creation that was not a remnant of something else. They were also defenceless, and he knew it. So in his last hour he did the only thing left to do: he divided himself. He poured what remained of his power into three vessels and set them over Middle Earth to watch, and he called them Valkyries — Brünnhilde, to shield Middle Earth from evil; Mist, to sense any danger that would fall upon humanity; Hildr, to foster life on Middle Earth. He had been the only thing holding the fallen gods in Hell, the ones who followed the Serpent down, and holding them there was not the same work as holding back the corrupted souls. The fallen gods have real power, and fragments of him are not enough to keep it buried. To mankind, such a thing does not have a name. They are not enemies. They are calamities. Now the Man is gone. They are coming — not to destroy Middle Earth, but to take it. They who once chose Hell now look toward Middle Earth. And in the dark behind them, something older than either side had already finished its work: the Serpent of the Savant. It never wanted a new world. It wanted the old one back, the whole one, before the tearing, before there was a Heaven to be desired and a Hell to be shut inside. It had outlived the collapse of everything, alone, for so long that patience stopped being a virtue and became a craft. So it built a machine. It took more years than the mind can hold. The thing it made does not kill and does not rule — it takes the memory of the fallen, everything they were, everything they knew, every age they carried, and it stores that memory as energy. Then it hid the machine in plain sight. It set one in every realm at once and disguised them as gates: a black gate standing in Hell, and in Heaven, and in Middle Earth, joining all three. The Serpent named them Helgrind. And then it waited, because a machine like that does not activate easily. A mortal's whole memory is one short season; ten thousand of them would not move it an inch. It needs the old dead — the kind whose memory runs back past Middle Earth, past Heaven, to the world before this one.",
+      settingText: "Middle Earth",
+      settingLocations: [
+        "Cliff Town",
+        "Helgrind",
+        "The Garden"
+      ],
+      factions: [
+        {
+          name: "Human & Valkyrie",
+          key: "angel",
+          winner: true,
+          members: [
+            { tag: "Martyr",           role: "Adam", headline: true },
+            { tag: "Ali",              role: "Eve" },
+            { tag: "TSL",              role: "Brünnhilde" },
+            { tag: "Tragicboy",        role: "Mist" },
+            { tag: "Nyxovaa",          role: "Hildr" },
+            { tag: "Igris",            role: "God Slayer" },
+            { tag: "Ansfe",            role: "God Slayer" },
+            { tag: "Blood",            role: "God Slayer" },
+            { tag: "Ssbakbar",         role: "Everlasting" },
+            { tag: "Thekindone",       role: "Everlasting" },
+            { tag: "Sourav5",          role: "Everlasting" },
+            { tag: "Sworit",           role: "Deception Mayhem" },
+            { tag: "Silver Mist",      role: "Deception Mayhem" },
+            { tag: "Omgkawaiiangel",   role: "Deception Mayhem" },
+          ]
+        },
+        {
+          name: "Fallen Gods",
+          key: "devil",
+          sigil: "devil",
+          members: [
+            { tag: "King of Treasure", role: "Baal", headline: true },
+            { tag: "Deva",             role: "Dagon" },
+            { tag: "Othmane",          role: "Anubis" },
+            { tag: "Ansh",             role: "Yama" },
+          ]
+        },
+        {
+          name: "The Serpent",
+          key: "neutral",
+          sigil: null,
+          members: [
+            { tag: "Cupid", role: "The Serpent", archetype: "The Serpent", headline: true },
+          ]
+        }
+      ],
+      mvps: [
+        {
+          rank: 1, rankNumeral: "I",
+          tag: "Deva",
+          faction: "Fallen Gods",
+          role: "Dagon",
+          text: "An outstanding game played with the weakest toolkit at the table. Dagon cannot kill, protect or investigate; his whole kit is a disguise and two channel wipes he never needed. Deva turned that into a permanent seat on the human war council. While Treasure slowly joined up the other Fallen Gods, Deva — whose review reads as Human & Valkyrie — installed himself as the town's analyst and steered it, disguised the whole time as Adam. The two of them synchronised through public chat in front of nineteen people and were never jointly suspected. He appears on no suspect list in the entire chapter, and he ran the Fallen Gods' planning in the open. He died to his own teammate's mark, not to opposition play."
+        },
+        {
+          rank: 2, rankNumeral: "II",
+          tag: "Nyxovaa",
+          faction: "Human & Valkyrie",
+          role: "Hildr",
+          text: "The strongest analyst in the game and it is not close. She joined two days before the start, replacing a dropout, with no history in the server. By Day 2 she had named ansh as Yama from his actual marking tell, flagged Oto and Treasure as Fallen Gods, and cleared OMGkawaiiAngel as Deception Mayhem against the town's consensus. In the endgame she made the decisions that gave her faction its most probable path to the win."
+        },
+        {
+          rank: 3, rankNumeral: "III",
+          tag: "TSL",
+          faction: "Human & Valkyrie",
+          role: "Brünnhilde",
+          text: "The most mechanically correct human in the game. Brünnhilde's textbook policy is to shield Hildr every day, since Hildr can revive Brünnhilde but not the reverse — TSL worked that out himself and ran it almost every reset. He blocked the Day-5 execution of Nyxovaa and the Day-6 attack on her, despite the Fallen Gods trying to sell the room an attack on the God Slayer to bait him into protecting the wrong seat; Treasure confirms in Helgrind that it cost them the kill that would have ended the game. Revived, he spent a single day protecting an ally and rallying his side into the strategy that gave them their best chance. His Day-8 vote arithmetic is the clearest strategic thinking any human produced."
+        },
+        {
+          rank: 4, rankNumeral: "IV",
+          tag: "Cupid",
+          faction: "The Serpent",
+          role: "The Serpent",
+          text: "The highest-variance game anyone played. On Day 1 he reconstructed Eve and all three Valkyries from one careless ping and had the broad shape of the board before anyone else. He killed Mist on Day 2 on instinct and happened to hit the single most valuable target available. On Day 4 he produced the most consequential public act of the chapter: a self-reveal, a mass tag and an ultimatum that swung a trial the humans were winning and killed their God Slayer. He killed Adam on Day 6."
+        },
+        {
+          rank: 5, rankNumeral: "V",
+          tag: "Othmane",
+          faction: "Fallen Gods",
+          role: "Anubis",
+          text: "Badly underrated by the table. He played an unbroken persona — the cheerful foreigner who has not read the rules and keeps voting on vibes — and then used his Helgrind role-checks with real discipline, confirming Deva as Dagon, Blood as a God Slayer and Nyxovaa as Hildr. He survived a trial as the publicly confirmed Fallen God with the votes already against him, by turning the humans' confidence in their own control of the trial against them."
+        }
+      ]
     }
   };
 
@@ -2847,7 +2938,7 @@
   // ---------- Hall of Fame ----------
   const ALIAS = { 'Sourav5':'Sourav', 'Tragic Boy':'Tragicboy', 'Silver Mist':'Silvermist' };
   const aliasOf = t => ALIAS[t] || t;
-  const HH_ORDER = ['hh1','hh2','hh3','hh4','hh5','hhx','hh6','hh7'];
+  const HH_ORDER = ['hh1','hh2','hh3','hh4','hh5','hhx','hh6','hh7','hh8'];
 
   // HH1 was run twice. The second run — the Red/White rerun — has no surviving roster,
   // so its results are recorded here instead. They count toward a player's record only:
@@ -2977,7 +3068,7 @@
   }
 
   function consecutive(p) {
-    const idx = { HH1:0, HH2:1, HH3:2, HH4:3, HH5:4, HHX:5, HH6:6, HH7:7 };
+    const idx = { HH1:0, HH2:1, HH3:2, HH4:3, HH5:4, HHX:5, HH6:6, HH7:7, HH8:8 };
     const ix = [...new Set(p.roles.map(r => idx[r.hh]).filter(v => v !== undefined))].sort((a,b)=>a-b);
     if (!ix.length) return 0;
     let best = 1, cur = 1;
@@ -3041,7 +3132,7 @@
     const og = arr.filter(p => p.roles.some(r => r.hh === 'HH1')).map(p => p.tag).sort();
     const stillActive = arr.filter(p => {
       const hs = new Set(p.roles.map(r => r.hh));
-      return hs.has('HH1') && (hs.has('HH6') || hs.has('HH7'));
+      return hs.has('HH1') && (hs.has('HH6') || hs.has('HH7') || hs.has('HH8'));
     }).map(p => p.tag).sort();
     const oneShot = arr.filter(p => p.apps === 1).map(p => p.tag).sort();
 
@@ -3060,7 +3151,7 @@
     const heroic = arr.filter(p => p.mvpInLoss.length > 0);
 
     // A player named on a worst-player list who was later named among the best.
-    const ORD = { HH1:0, HH2:1, HH3:2, HH4:3, HH5:4, HHX:5, HH6:6, HH7:7 };
+    const ORD = { HH1:0, HH2:1, HH3:2, HH4:3, HH5:4, HHX:5, HH6:6, HH7:7, HH8:8 };
     const comeback = arr.filter(p => p.lmvpPlaces.length).map(p => {
       const low = p.lmvpPlaces.reduce((a, b) => ORD[a.hh] <= ORD[b.hh] ? a : b);
       const rise = p.mvpPlaces
@@ -3128,7 +3219,7 @@
     // A rivalry is a pairing. This is not — it only has one direction, and it only
     // counts once the same hand has done it twice. If it ever happens again to
     // anybody, it will find itself.
-    const ORD2 = { HH1:0, HH1v2:1, HH2:2, HH3:3, HH4:4, HH5:5, HHX:6, HH6:7, HH7:8 };
+    const ORD2 = { HH1:0, HH1v2:1, HH2:2, HH3:3, HH4:4, HH5:5, HHX:6, HH6:7, HH7:8, HH8:9 };
     const nemesis = Object.values(UNDOINGS.reduce((acc, u) => {
       const key = u.by + ' ' + u.of;
       (acc[key] || (acc[key] = { by: aliasOf(u.by), of: aliasOf(u.of), items: [] })).items.push(u);
@@ -3294,7 +3385,7 @@
             <ol class="hof-rank">${list(spies, ([tag,n]) => `<li><b>${tag}</b><span class="hof-val">${n}</span></li>`)}</ol>
           </article>
         </div>
-        <p class="hof-quote">Thekindone has been named among the best in four chapters and walked away victorious in two — no one in the chronicle has been praised so often for so little reward.</p>
+        <p class="hof-quote">Thekindone has been named among the best in four chapters and won only three of eight — no one in the chronicle has been praised so often for so little reward.</p>
       </section>
 
       <section class="hof-section">
@@ -3450,12 +3541,12 @@
   function applyView() {
     const hash = window.location.hash.replace('#', '').toLowerCase();
     const isLore = hash === 'lore';
-    const hhMatch = hash.match(/^hh([1-7])$/);
+    const hhMatch = hash.match(/^hh([1-8])$/);
     const isHHX = hash === 'hhx';
     const isHOF = hash === 'hof';
 
     // Clear all view classes
-    ['view-landing','view-lore','view-hh1','view-hh2','view-hh3','view-hh4','view-hh5','view-hh6','view-hh7','view-hhx','view-hof']
+    ['view-landing','view-lore','view-hh1','view-hh2','view-hh3','view-hh4','view-hh5','view-hh6','view-hh7','view-hh8','view-hhx','view-hof']
       .forEach(c => document.body.classList.remove(c));
 
     if (hhMatch) {
