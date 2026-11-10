@@ -1247,6 +1247,25 @@
       0 0 40px rgba(194,69,58,.4);
   }
 
+  .lore-text + .lore-text { margin-top: 1.05em; }
+  .lore-text.cont::first-letter {
+    font-family: inherit; font-size: inherit; float: none; line-height: inherit;
+    padding: 0; color: inherit; text-shadow: inherit;
+  }
+  .lore-epigraph {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: clamp(14px, 1.7vmin, 17px);
+    line-height: 1.8;
+    letter-spacing: .04em;
+    color: rgba(216,170,90,.92);
+    text-align: center;
+    max-width: 620px;
+    margin: 0 auto;
+    text-shadow: 0 1px 4px rgba(0,0,0,.85);
+  }
+  .lore-epigraph + .lore-epigraph { margin-top: .6em; }
+  .lore-epigraph + .lore-text { margin-top: 2.2em; }
+
   /* ---------- Setting (simple legendary text) ---------- */
   .setting-text {
     font-family: 'Cinzel', Georgia, serif;
@@ -2654,7 +2673,56 @@
       number: "HH7",
       title: "Ragnarok",
       time: "The Last Days of Helios",
-      lore: "Before the first throne, before the first crown, before Heaven learned to call itself holy and Hell learned to call itself damned, there was Helios. It was not Heaven and it was not Hell, but both before division — a realm where gods walked beneath one sky and no soul yet knew whether light and darkness were enemies. Those gods worshipped neither strength nor beauty nor mercy, but knowledge, and above them all stood the one who saw everything that had been and everything that would be: the Savant. He saw the end before the first god had learned to fear it. He saw Helios split open, and the gods die screaming into their own creation. Because even omniscience cannot always prevent what it sees, the Savant did not try to save himself. He made two witnesses instead, to inherit whatever would remain: a Man, gifted with power beyond imagination, and a Serpent, gifted with immortality. Then the last days came. Fifteen gods stood in the ruin of a world that was ending around them without asking their permission, and each dawn it broke somewhere, and each dusk it took one of them with it. Two among the fifteen were more than gods, but the truth of it was sealed even from the two who carried it, and would not be spoken until every death the world was owed had been paid. When the last of them fell and the survivors were finally told their own names, all that remained was to choose whom to follow into whatever came after.",
+      epigraph: [
+        "“What if you can live forever but the one thing that can bring meaning to your life is something you shall never achieve?”",
+        "This is the story of such a being."
+      ],
+      lore: [
+        "Helios. Existing outside of time and space, this was a realm of gods. Those gods worshipped neither strength nor beauty; to them, knowledge was their pride, and to keep accumulating knowledge was to still be alive. How unusual, a place bursting with powers and gods with such mystical gifts, yet there is no war, no greed for more.",
+        "The greatest of them, a god who saw everything that had been and everything that was coming, was called The Savant.",
+        "Of everything the Savant ever did, only one thing was done without his knowing how it would end.",
+        "He made an immortal serpent.",
+        "He never said why, and nobody asked him. In Helios a god’s work was his own business, and the others had work of their own to mind.",
+        "The Serpent was small enough to lie along his forearm, and he began to tell it things.",
+        "He told it tales of the realm and of the gods’ works: how Oranheim had spent ages collecting the sounds stars make as they die, and could perform any of them from memory; how Isvet kept a list of every question no god had thought to ask yet, which made her hard company at gatherings; how Enra would conjure black holes to study true darkness. And many more. Above all of it, the Savant showed the Serpent the beautiful warmth of Helios, where dusk and dawn happen at the same time.",
+        "For an eternity, that was its life. Basking in tales, and in the beauty and the warmth of Helios.",
+        "Then the tales stopped.",
+        "The Savant still let it lie along his forearm. But he had begun to do something with his attention that the Serpent had never seen him do. He looked tired in a way that should not have been possible for a god of his aptitude. He would begin a sentence and then stop midway.",
+        "It waited. It had been taught patience by a god who had all of time laid out in front of him like a map.",
+        "And the Savant finally told it.",
+        "He had seen the end of Helios. The realm was dying from within, and nothing would be able to stop it. Ages of gathered knowledge had been poured into one place, and nothing that has ever been built can hold that much of anything. He said he had watched the weight of it settle. He said there would come a point, and he knew the hour of it, when Helios would tear in two. And during the tearing, natural disasters of a kind no power in the realm could answer.",
+        "Gods dying.",
+        "“Every future I can reach into, I have reached into. There is no hope for Helios.” He was quiet a while.",
+        "That was the first grief of his long life, and the Serpent was the only one in the realm who saw it happen: not that the end was coming, but that he could see it coming from very far off and could not move it an inch.",
+        "Ragnarok began at dusk.",
+        "What the Serpent remembered afterward was not the tearing. The tearing was enormous and impersonal and in some way easier to hold than what followed. What it remembered was the wind.",
+        "The wind came up out of the split and it carried sound. It carried sound from one edge of the realm to the other without losing any of it, so that every death in Helios was heard everywhere in Helios, all night, by everyone. No god died alone. No god was spared the hearing of another.",
+        "The Serpent was immortal. It had been made that way without being asked, by a god who did not know how it would end. It could not die, and so, for as long as the ending lasted, it did the only thing available to it, which was to witness, perfectly, everything it had been taught to love coming apart.",
+        "Helios had no word for what that was. They had never needed one.",
+        "Near the end the Savant called it to him, and the Serpent found what was left of the gods standing in a ring, in the ruin of a place where it had once been shown something beautiful.",
+        "They were making a new being, a vessel capable of holding more power than had ever been imagined, the first human, a man, and they were paying for him with themselves. It watched Oranheim’s gift go out of him and into the vessel on the ground, and watched him collapse. It watched gods it had been introduced to by name, one at a time, empty themselves out past the point where a god can remain a god. They gave until there was almost nothing left.",
+        "The Savant was last. Before that, he spoke to the Serpent.",
+        "“My son.” He had never called it that before, and he said it plainly, the way he had always stated things he had already checked. “You will not be given power the way the Man has been given it. Do not grieve that. Memory is a power of its own.”",
+        "The Serpent did not understand, and there was no time left to tell it again in a different order.",
+        "“As long as you remember us, and remember Helios for what it was, we are still alive. Carry it.”",
+        "He had made it without knowing how it would end, and in all that eternity he had never once said what it was for. He said it now, in the last hour he had to say anything in, and the Serpent understood much later that this had not been foresight. It had been a decision.",
+        "Then he went into the circle. The others had given their power. The Savant gave more than that: he poured every ounce of his being into the vessel, his gift and his knowledge and his sight and the body that had carried them, and he did not stop where the others had stopped, and he did not stop after that. He had nothing left to hold back for. He had already seen that there was no future in which he was needed.",
+        "By the end there was nobody left to fall. The circle stood empty where he had been.",
+        "And the Man opened his eyes.",
+        "Afterward, the two halves of the realm drifted.",
+        "One fell slowly toward dusk and kept falling. The other rose into a dawn, and the light coming off it was the light the Serpent had grown up in, and it hung there across the widening darkness like a symbol of hope.",
+        "The survivors were all gathered there, along with the Man. The Serpent did not go. It could not bring itself to leave a part of Helios behind, and so it stayed with the other half.",
+        "It looked up across the gap and watched the Man walk among them. He was beautiful. He carried the powers and the sacrifices of so many gods, and of the Savant himself, and when he raised his hand the weather obeyed him, which no god of Helios had ever managed, not once, not at the height of them.",
+        "The Serpent’s hope in that moment was the largest thing it has ever held. It had seen the price paid in full. The gods had put the whole of Helios into this man so that Helios would go on, and here he stood, and the storms were already turning back.",
+        "Then the Man looked across at the other half, the dark one, falling away.",
+        "And he let it fall.",
+        "The Serpent looked up with a lonely smile. It did not matter. Helios still had a future.",
+        "The Man turned back to the gods on the bright half, the last of those who had made him, the ones who had poured their divinity into his body the night before, and he threw them out. He drove them across, all of them, down into the dark that was still drifting, and he did it without the slightest guilt. A haven wants no previous tenants. He meant to make a new life of his own shaping and to stand above it as one god, true and sole and unquestioned, and for that the bright half had to be emptied of anyone who remembered a time before him. Every god was struck with an immense confusion as they met, for the first time, greed.",
+        "It was unforgivable. The Savior of Helios, the hope of the realm, had betrayed and abandoned his own creators.",
+        "The dawn half came to be called Heaven. The other was called Hell.",
+        "In Hell, without the Man’s protection, and having given most of their power away to him, the gods were slowly corrupted by the creeping darkness. The weaker ones were twisted into disgusting forms and became monsters. Those who could resist the change still had their sanity drained out of them a little at a time. Hardly anyone was the same as they had been in Helios. Only the strongest of the gods managed to hold on.",
+        "And across the dark, close enough to see and never to reach, the bright half still hangs there holding the light it grew up in, under one god who will not let the fallen back in."
+      ],
       settingText: "Dawn and Dusk, on the last days of Helios",
       factions: [
         {
@@ -2732,7 +2800,58 @@
       number: "HH8",
       title: "The Ancient War of Remnants",
       time: "Before Year 0",
-      lore: "He asked the gods to follow him. On the last day of Helios, when the sky came apart and seven were left standing, the Man stood among gods and asked to be followed. No one did. So he went alone. He raised Heaven from the corpse of Helios, and he filled it with law, and with song, and with winged children who would one day forget they were born from a broken whole. Ages passed. He brought life to this place he called Heaven, and he kept the corrupted souls of Hell at bay. But he was not immortal. Knowing his age would end, he made Middle Earth — a lesser cradle beneath Heaven, a small realm under an enormous sky — and he filled it with something that had never existed before. Not gods. Not children of the broken world. Mankind. Short-lived, frightened, ordinary, but in that holding something special. Nothing about them was owed. Nothing about them was inherited. They were the only thing in all of creation that was not a remnant of something else. They were also defenceless, and he knew it. So in his last hour he did the only thing left to do: he divided himself. He poured what remained of his power into three vessels and set them over Middle Earth to watch, and he called them Valkyries — Brünnhilde, to shield Middle Earth from evil; Mist, to sense any danger that would fall upon humanity; Hildr, to foster life on Middle Earth. He had been the only thing holding the fallen gods in Hell, the ones who followed the Serpent down, and holding them there was not the same work as holding back the corrupted souls. The fallen gods have real power, and fragments of him are not enough to keep it buried. To mankind, such a thing does not have a name. They are not enemies. They are calamities. Now the Man is gone. They are coming — not to destroy Middle Earth, but to take it. They who once chose Hell now look toward Middle Earth. And in the dark behind them, something older than either side had already finished its work: the Serpent of the Savant. It never wanted a new world. It wanted the old one back, the whole one, before the tearing, before there was a Heaven to be desired and a Hell to be shut inside. It had outlived the collapse of everything, alone, for so long that patience stopped being a virtue and became a craft. So it built a machine. It took more years than the mind can hold. The thing it made does not kill and does not rule — it takes the memory of the fallen, everything they were, everything they knew, every age they carried, and it stores that memory as energy. Then it hid the machine in plain sight. It set one in every realm at once and disguised them as gates: a black gate standing in Hell, and in Heaven, and in Middle Earth, joining all three. The Serpent named them Helgrind. And then it waited, because a machine like that does not activate easily. A mortal's whole memory is one short season; ten thousand of them would not move it an inch. It needs the old dead — the kind whose memory runs back past Middle Earth, past Heaven, to the world before this one.",
+      lore: [
+        "Hell was sealed.",
+        "Whatever the Man did to the dark half on the night he emptied the bright one, it left no way out. The gods searched and found no gate, no seam, no crack they could exploit. They had given him their power and he had used it to lock the door behind them.",
+        "Imprisoned there, their wrath and hatred was the only thing in Hell that ever grew without being tended.",
+        "Above, across a gap that only widened, he was building.",
+        "He raised Heaven out of the corpse of Helios. He did not preserve it; he used it. The bright half had carried a realm once and now it carried another one. He filled it with laws, songs, and created winged children who would eventually forget they had been born out of something broken.",
+        "He created another life form.",
+        "Not gods, who were the only kind of being Helios had ever managed, and not winged children. He went back to the one design he trusted completely, his own body, an anatomy the best of the gods had built, and he made it again smaller and simpler. With no gifts and no powers injected into the vessel, what came out was a creature so fragile it could be killed by weather.",
+        "He made a cradle to put them in. Beneath Heaven, under a sky so large that nothing in it could be reached from the ground, he set a small realm and called it Middle Earth, and he filled it with people.",
+        "They worshipped him. There was no competition and no history, so he was the only god they ever knew, exactly what he had wanted from the night he emptied the bright half of everyone who could remember a time before him. They gave his winged children a name of their own and called them Angels. They built their accounts of the beginning of the world out of nothing but him.",
+        "And he guarded them. From the remnants of the past, the gods locked away in Hell.",
+        "But he was not immortal. Power is not endlessness, and his age was going to run out. He felt his time coming, and with that came the only piece of foresight he ever actually earned: he knew what would happen to his people the day he was no longer standing there. They were defenceless. He had made them that way on purpose. They had been given nothing with which to answer anything, because nothing was ever supposed to reach them.",
+        "In his last hour he divided himself.",
+        "He took what power he had left and he split it three ways and he put each part into a vessel, and he set the three of them over Middle Earth to watch it in his place. He called them Valkyries, and he gave each of them one piece of the work he would no longer be there to do.",
+        "Brünnhilde, to shield Middle Earth from evil.",
+        "Mist, to sense any danger falling toward humanity.",
+        "Hildr, to foster life.",
+        "It was the best he could do. It was also not enough, and he was not a stupid being; he must have known that, below him, sealed in the dark, were gods who had been nursing one grievance for the longest time with nothing else to occupy them, and the only thing that had ever held that down was him, undivided, present and personally attending to it. Three parts of him were not him. Fragments of a god are not a god.",
+        "Then he was gone.",
+        "In Hell time passed differently.",
+        "There was no dawn to measure it against and nothing was built, so what the gods had instead was a cycle of suffering and anguish. Corrupted gods became monsters and attacked the others. The chaos had no seasons. Over all of it lay the darkness itself, which was not simply an absence of light but something with an appetite, and it worked on them slowly and without pause, without caring about the gods they once were.",
+        "The Serpent helplessly watched it take them one at a time.",
+        "The weaker gods lost themselves first. Their bodies came apart and reformed into something worse, and when the change was finished there was nothing inside left to talk to. The Serpent had known most of them by name. The stronger ones kept their faces and lost their minds instead, slowly, bit by bit as time passed, so that a god who answered the Serpent sensibly once would answer it the next time with something that had nothing to do with the question.",
+        "The Serpent could not die, so it stayed, and it saw all of it.",
+        "It also worked out, somewhere in the middle of that, that none of it could be fixed. Hell was not a sick place that might recover.",
+        "While the Man was above being worshipped, the gods of Hell were going under, and as they went they came to the Serpent. Not out of affection. Each of them could feel the dark getting into the place where their knowledge was kept, and here was a creature that could not die and had been raised on listening. So they taught it. Every working, every proof, every single thing they knew, handed over fast and out of order while they still had it, so that their knowledge would survive somewhere after they could no longer hold it.",
+        "It went on for a time too long to be measured, and then it stopped, because there was no one left to teach.",
+        "Every god in Hell had been corrupted. Some became monsters. Some still had a face and a name and nothing behind either that remembered Helios. The Serpent was carrying the complete learning of a dead pantheon, and it was carrying it alone, and there was no longer a single being in the realm it could say the word Helios to and be understood.",
+        "So it began to build.",
+        "It used all of it. Everything the Savant had ever told it, and everything the dying had taught it, went into making this one relic, and the making of that relic took more years than a mind can hold. It was not a weapon and it gave the Serpent no authority over any creature in Hell. What it did was take memory. It drew out of the fallen everything they had been and everything they had known, all of it, and held that as energy, and the Serpent had understood something about the dark that none of the gods had been in a condition to notice: that in a realm where nothing is built and nothing ends, memory is the only thing left in any quantity worth harvesting.",
+        "And then it waited, because the relic was only half of what it was meant to be.",
+        "When the Man died, every being in Hell noticed, and the Serpent was no exception. It turned the relic into a gate and burned the memories of the beings of Hell to open it. Heaven was out of reach; all the memory in Hell was not enough energy to cross that far. Middle Earth was close. After an eternity of searching a sealed world for a way out, the Serpent made one.",
+        "It named the gate Helgrind.",
+        "The fallen gods noticed the absence almost at once. They had spent far too long with their faces turned up at the weight holding them down, and the moment it came off they sensed it immediately. What stood over Middle Earth now was three fragments of the Man and a species so fragile.",
+        "And there was a gate.",
+        "Four of them led the invasion through it: Baal, Dagon, Anubis, Yama, each with legions of monsters behind him.",
+        "They did not come to burn Middle Earth, not for something so simple as revenge. They had looked at that small bright realm from the dark for all this time while they struggled in it, and they wanted it. It was warm, it was ordered, it was better than anything they had lived in since the tearing, and they came to take it.",
+        "To the people of Middle Earth it did not register as an enemy, because it was not one. An enemy has a size you can learn. This was a calamity, the way a flood is not your opponent.",
+        "And behind both armies, belonging to neither, came the Serpent. It did not fight for Middle Earth and it did not fight against it. Middle Earth was not what it was there for.",
+        "The Valkyries did the only thing three fragments could do. They gave their power away again.",
+        "Brünnhilde gave humanity the power to kill the things that came through Helgrind. Mist gave them the power to hide from them. Hildr gave them protection against them. The people had no word for what they were fighting, so they made one and called them devils.",
+        "And it held. Not well and not everywhere, but farmers and herdsmen blessed with powers managed to hold the devils to a standstill, and nobody below had expected that.",
+        "Then Mist was tragically killed by the Serpent.",
+        "It happened outside any battle and for neither side, and no one who saw it could say what it had been for. One of the three was simply gone, and every warning Middle Earth had ever been given in advance went with her. After that the devils arrived without being seen coming. Lines broke in places no one had thought to defend, and the fighting stopped being a defence and became a retreat as Yama and Baal went through humanity one massacre at a time.",
+        "Brünnhilde would not have it. She took the strongest fighters humanity had produced and went at the fallen gods themselves instead of the legions, and she pushed harder than ever. Her group eliminated Dagon and then Yama before she died in battle. Baal and Anubis fell before the end as well, and the end was a long way off. The war lasted more than a decade.",
+        "When it was over, Hildr was the only one left.",
+        "Every fallen god who had come through Helgrind was dead. So was Brünnhilde. So was Mist. So was humanity, all of it, every one of the people the Man had made.",
+        "Hildr was the last fragment remaining, and she spent herself the way her maker had. She poured what she was into Middle Earth, buried Helgrind deep under the ruins of the war, and created a new generation of humanity, giving them another chance. It was a second time and a final one, because there was nothing left in her to do it again.",
+        "At the place where she drew her last breath a tree grew, and it never stopped growing, not even once it stood over Middle Earth larger than a forest.",
+        "The people who woke into that world woke underneath the protection of the last Valkyrie.",
+        "Peace came, and humanity advanced slowly and together. And living among them, the Serpent was still there."
+      ],
       settingText: "Middle Earth",
       settingLocations: [
         "Cliff Town",
@@ -2821,6 +2940,14 @@
       ]
     }
   };
+
+  // Lore may be one string (one paragraph, drop cap) or an array of paragraphs.
+  // Only the first paragraph carries the drop cap; an optional epigraph sits above it.
+  function loreBlock(data) {
+    const paras = Array.isArray(data.lore) ? data.lore : [data.lore];
+    const epi = (data.epigraph || []).map(t => `<p class="lore-epigraph">${t}</p>`).join('');
+    return epi + paras.map((t, i) => `<p class="lore-text${i ? ' cont' : ''}">${t}</p>`).join('');
+  }
 
   function renderDashboard(hhKey) {
     const data = HH_DATA[hhKey];
@@ -2951,7 +3078,7 @@
       </section>` : ''}
       <section class="hh-section">
         <h2 class="hh-section-title">Lore</h2>
-        <p class="lore-text">${data.lore}</p>
+        ${loreBlock(data)}
       </section>`;
 
     const settingInner = (data.settingLocations && data.settingLocations.length)
